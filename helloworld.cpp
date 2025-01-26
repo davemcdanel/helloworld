@@ -7,7 +7,7 @@ using namespace std;
 int main()
 {
     vector<string> msg {"Hello", "C++", "World", "from", "VS Code", "and the C++ extension!"};
-    msg.push_back("\nHello \n");
+    msg.push_back("\nHello!\n");
     
     for (const string& word : msg)
     {
