@@ -27,7 +27,7 @@ TARGET_DIR = $(shell pwd)
 BUILDID=$(shell date +%Y%m%d-%H:%M:%S)
 COMMIT_COMMENT?='Automatic commit of successful build.'
 
-HOMEDIR=/home/pitmaster
+HOMEDIR= ../
 
 # change these to proper sub-directories where each file should be located
 SRCDIR = ./Source_Files
@@ -46,8 +46,9 @@ CFLAGS = -I$(HDRDIR) -Wall -I. -g -O0 -DBUILD_SYSTEM_OKAY
 
 LINKER = g++
 # linking flags here
-LFLAGS = -Wall -I. -lm -lpthread -lpigpio -lrt
-#LFLAGS   = -Wall -I. -lm -lpthread
+#LFLAGS = -Wall -I. -lm -lpthread -lpigpio -lrt
+#LFLAGS = -Wall -I. -lm -lpthread -Wl,-subsystem,windows
+LFLAGS   = -Wall -I. -lm -lpthread
 
 $(BINDIR)/$(TARGET): $(OBJECTS)
 	@$(LINKER) $(OBJECTS) $(LFLAGS) -o $@
@@ -56,9 +57,11 @@ $(BINDIR)/$(TARGET): $(OBJECTS)
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 	@$(CC) $(CFLAGS) -c $< -o $@
 	@echo "Compiled "$<" successfully!"
+	@echo USERNAME: $(USERNAME)
 
 .PHONY: all
-all: clean $(BINDIR)/$(TARGET)
+all: 
+	clean $(BINDIR)/$(TARGET)
 
 .PHONY: clean
 clean:
@@ -88,18 +91,18 @@ run: $(BINDIR)/$(TARGET)
 
 .PHONY: install
 install:
-	$(rm) /usr/local/bin/$(TARGET)
-	install $(BINDIR)/$(TARGET) /usr/local/bin/
+	$(rm) C:\Users\$(USERNAME)\appdata\Local\$(TARGET_DIR)\$(TARGET)
+	install $(BINDIR)/$(TARGET) C:\Users\$(USERNAME)\appdata\Local\$(TARGET_DIR)\
 	rm -fr $(HOMEDIR)/.$(TARGET)/
 	install -d $(HOMEDIR)/.$(TARGET)/
 	install $(TARGET_DIR)/.$(TARGET)/$(TARGET).conf $(HOMEDIR)/.$(TARGET)/$(TARGET).conf
 	@echo Configuration file located $(HOMEDIR)/.$(TARGET)/.$(TARGET).conf
-	@echo "$(TARGET) installed to /usr/local/bin/ Install complete!"
+	@echo "$(TARGET) installed to C:\Users\$(USERNAME)\appdata\Local\$(TARGET_DIR)\ Install complete!"
 
 .PHONY: uninstall
 uninstall:
-	@rm /usr/local/bin/$(TARGET)
-	@echo "$(TARGET) removed from /usr/local/bin/ Uninstall complete!"
+	@rm C:\Users\$(USERNAME)\appdata\Local\$(TARGET_DIR)\$(TARGET)\$(TARGET)
+	@echo "$(TARGET) removed from C:\Users\$(USERNAME)\appdata\Local\$(TARGET_DIR)\ Uninstall complete!"
 
 .PHONY: init
 init:
