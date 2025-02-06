@@ -8,7 +8,6 @@
 
 #include "function.hpp"
 
-
 int main(){
     std::vector<std::string> msg {"Hello", "C++", "World", "from", "VS Code", "and the C++ extension!"};
     msg.push_back("\nHello!\n");
@@ -20,9 +19,7 @@ int main(){
     std::cout << int(function()) << std::endl;
 return 0;
 }
-
-
-
+ 
 /*
 #include <windows.h>
 /// @brief Window Proc
