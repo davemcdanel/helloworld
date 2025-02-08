@@ -1,3 +1,18 @@
+/** Hello World! - For C++
+ * \file main.cpp
+ * \brief Main program entry point.
+ *
+ * \mainpage Hello World! - For C++
+ * \version 0.0.2
+ * \brief C++ edition of the classic Hello World program. This version is used to test VSCODE with MSYS2 MinGW64 but should compile on most versions of C++.
+ *
+ *
+ * \author David Lee McDanel <smokepid@gmail.com>; <pidsynccontrol@gmail.com>
+ * \date June 5, 2016, 9:36 AM
+ * \copyright Copyright (c) 2021 David L. McDanel
+ * Free and Open
+ */
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -12,11 +27,13 @@ int main(){
     std::vector<std::string> msg {"Hello", "C++", "World", "from", "VS Code", "and the C++ extension!"};
     msg.push_back("\nHello!\n");
     
+    std::cout << "\x1B[2J\x1B[H";
+
     for (const std::string& word : msg){
         std::cout << " " << word;
     }
 
-    std::cout << int(function()) << std::endl;
+    std::cout << "Some memory location: " << int(function()) << std::endl;
 return 0;
 }
  
