@@ -1,3 +1,7 @@
+# Keep the doc folder but not the docs
+doc/*
+!doc/Doxyfile
+
 # ---> C++
 # Prerequisites
 *.d
