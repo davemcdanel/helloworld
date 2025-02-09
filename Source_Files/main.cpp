@@ -52,7 +52,13 @@ int main(){
         std::cout << " " << word;
     }
 
-    std::cout << "Some memory location: " << int(function()) << std::endl;
+    int a = 1, b = 2, c = 0;
+
+    c=function(a,b);
+
+    std::cout << "a=" << a << "\n";
+    std::cout << "b=" << b << "\n";
+    std::cout << "c=" << c << std::endl;
 return 0;
 }
  

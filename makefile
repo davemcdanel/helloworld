@@ -64,10 +64,10 @@ all:
 
 .PHONY: clean
 clean:
-	@$(rm) $(OBJECTS)
-	@echo "Object cleanup complete!"
-	@$(rm) $(BINDIR)/$(TARGET)
-	@echo "Executable removed!"
+	$(rm) $(OBJECTS)
+	echo "Object cleanup complete!"
+	$(rm) $(BINDIR)/$(TARGET)
+	echo "Executable removed!"
 
 .PHONY: commit
 commit:

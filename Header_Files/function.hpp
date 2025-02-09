@@ -2,12 +2,12 @@
 #define HEADER_HPP
 
 /**
- * \brief This returns some value.
+ * @brief Adds two numbers a and b, returns the value.
  * 
- *  This is a longer description.
- * 
- * \return some value
+ * @param a 
+ * @param b 
+ * @return int
  */
-int function();
+int function(int,int);
 
 #endif
