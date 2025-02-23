@@ -4,8 +4,8 @@
             "type": "cppbuild",
             "label": "Makefile build active workspace",
             "command": "C:\\msys64\\usr\\bin\\make.exe",
-            "args": [],
-            "problemMatcher": [],
+            "args": ["clean", "all"],
+            "problemMatcher": ["$gcc"],
             "group": {
                 "kind": "build",
                 "isDefault": true

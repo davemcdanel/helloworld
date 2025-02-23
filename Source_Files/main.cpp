@@ -35,6 +35,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <limits>
 
 #ifndef BUILD_SYSTEM_OKAY
     #error "Build system not set up"
@@ -42,78 +43,65 @@
 
 #include "function.hpp"
 
-int main(){
-    std::vector<std::string> msg {"Hello", "C++", "World", "from", "VS Code", "and the C++ extension!"};
-    msg.push_back("\nHello!\n");
+int main() {
+    std::vector<std::string> msg {"Hello", "C++", "World!", "\n"};
+    msg.push_back("\nAdd any two numbers.\n");
     
-    std::cout << "\x1B[2J\x1B[H";
-
-    for (const std::string& word : msg){
+    #ifdef _WIN32
+        system("cls");
+    #else
+        std::cout << "\x1B[2J\x1B[H";
+    #endif
+   
+    for (const std::string& word : msg) {
         std::cout << " " << word;
     }
+    std::cout << "----------------" << std::endl;
 
-    int a = 1, b = 2, c = 0;
+    int a{0}, b{0}, c{0};
+    int retries = 5;
 
-    c=function(a,b);
-
-    std::cout << "a=" << a << "\n";
-    std::cout << "b=" << b << "\n";
-    std::cout << "c=" << c << std::endl;
-return 0;
-}
- 
-/*
-#include <windows.h>
-/// @brief Window Proc
-/// @param hWnd 
-/// @param uMsg 
-/// @param wParam 
-/// @param lParam 
-/// @return 0
-LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-    switch (uMsg) {
-        case WM_DESTROY:
-            PostQuitMessage(0);
+    // Get input for a
+    while (retries > 0) {
+        std::cout << "Retries remaining: " << retries << std::endl;
+        if (getIntegerInput("Enter value for a: ", a)) {
+            std::cout << "Got valid a: " << a << std::endl;
             break;
-        default:
-            return DefWindowProc(hWnd, uMsg, wParam, lParam);
+        }
+        retries--;
+        std::cout << "----------------" << std::endl;
     }
+    if (retries == 0) {
+        std::cout << "Too many invalid attempts for a. Exiting." << std::endl;
+        return 1;
+    }
+
+    // Get input for b
+    retries = 5;
+    while (retries > 0) {
+        std::cout << "Retries remaining: " << retries << std::endl;
+        if (getIntegerInput("Enter value for b: ", b)) {
+            std::cout << "Got valid b: " << b << std::endl;
+            break;
+        }
+        retries--;
+        std::cout << "----------------" << std::endl;
+    }
+    if (retries == 0) {
+        std::cout << "Too many invalid attempts for b. Exiting." << std::endl;
+        return 1;
+    }
+
+    // Debug and compute
+    std::cout << "Calling function with a=" << a << ", b=" << b << std::endl;
+    c = function(a, b);
+    std::cout << "Function returned: " << c << std::endl;
+    std::cout << "Preparing output..." << std::endl;
+    std::cout << "Output:\n" << a << "+" << b << "=" << c << std::endl;
+    std::cout << "Program ending." << std::endl;
+    std::cout << "Press ENTER to continue..." << std::endl;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.get();
+
     return 0;
 }
-
-/// @brief Main window.
-/// @param hInstance 
-/// @param hPrevInstance 
-/// @param lpCmdLine 
-/// @param nCmdShow 
-/// @return 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-
-    // Register window class
-    WNDCLASSEX wcex = {0};
-    wcex.cbSize = sizeof(WNDCLASSEX);
-    wcex.style = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc = WindowProc;
-    wcex.hInstance = hInstance;
-    wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
-    wcex.lpszClassName = "My Window Class";
-    RegisterClassEx(&wcex);
-
-    // Create window
-    HWND hWnd = CreateWindowEx(0, 
-        "My Window Class", 
-        "Hello, Luke!", 
-        WS_OVERLAPPEDWINDOW, 
-        CW_USEDEFAULT, CW_USEDEFAULT, 800, 600, 
-        nullptr, nullptr, hInstance, nullptr);
-    ShowWindow(hWnd, nCmdShow);
-
-    // Message loop
-    MSG msg;
-    while (GetMessage(&msg, nullptr, 0, 0)) {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
-    }
-    return (int) msg.wParam;
-}
-*/
