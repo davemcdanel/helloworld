@@ -37,12 +37,13 @@ BINDIR = ./bin
 
 SOURCES := $(wildcard $(SRCDIR)/*.cpp)
 OBJECTS := $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
+DEPS := $(OBJECTS:.o=.d)
 
 rm = rm -f
 
 CC = g++
 # compiling flags here
-CFLAGS = -I$(HDRDIR) -Wall -I. -g -O0 -DBUILD_SYSTEM_OKAY
+CFLAGS = -I$(HDRDIR) -Wall -I. -g -O0 -DBUILD_SYSTEM_OKAY -MMD -MP
 
 LINKER = g++
 # linking flags here
@@ -63,7 +64,7 @@ all: $(BINDIR)/$(TARGET)
 
 .PHONY: clean
 clean:
-	@$(rm) $(OBJECTS)
+	@$(rm) $(OBJECTS) $(DEPS)
 	@echo "Object cleanup complete!"
 	@$(rm) $(BINDIR)/$(TARGET)
 	@echo "Executable removed!"
@@ -89,11 +90,11 @@ run: $(BINDIR)/$(TARGET)
 
 .PHONY: install
 install:
-	$(rm) C:\Users\$(USERNAME)\appdata\Local\$(TARGET_DIR)\$(TARGET)
-	install $(BINDIR)/$(TARGET) C:\Users\$(USERNAME)\appdata\Local\$(TARGET_DIR)\
-	rm -fr $(HOMEDIR)/.$(TARGET)/
-	install -d $(HOMEDIR)/.$(TARGET)/
-	install $(TARGET_DIR)/.$(TARGET)/$(TARGET).conf $(HOMEDIR)/.$(TARGET)/$(TARGET).conf
+	@$(rm) C:\Users\$(USERNAME)\appdata\Local\$(TARGET_DIR)\$(TARGET)
+	@install $(BINDIR)/$(TARGET) C:\Users\$(USERNAME)\appdata\Local\$(TARGET_DIR)\
+	@rm -fr $(HOMEDIR)/.$(TARGET)/
+	@install -d $(HOMEDIR)/.$(TARGET)/
+	@install $(TARGET_DIR)/.$(TARGET)/$(TARGET).conf $(HOMEDIR)/.$(TARGET)/$(TARGET).conf
 	@echo Configuration file located $(HOMEDIR)/.$(TARGET)/.$(TARGET).conf
 	@echo "$(TARGET) installed to C:\Users\$(USERNAME)\appdata\Local\$(TARGET_DIR)\ Install complete!"
 
