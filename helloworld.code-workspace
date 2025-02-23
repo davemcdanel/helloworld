@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"*.dox": "doxygen",
+			"vector": "cpp",
+			"limits": "cpp"
+		}
+	}
+}
