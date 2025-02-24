@@ -1,7 +1,7 @@
 {
     "configurations": [
         {
-            "name": "Makefile build and debug active workspace",
+            "name": "Build and Debug",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}\\bin\\${workspaceFolderBasename}.exe",
@@ -24,7 +24,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "Makefile build active workspace"
+            "preLaunchTask": "Build"
         }
     ],
     "version": "2.0.0"

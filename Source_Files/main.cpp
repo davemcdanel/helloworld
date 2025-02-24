@@ -47,13 +47,13 @@
 int main() {
     std::vector<std::string> msg {"Hello", "C++", "World!", "\n"};
     msg.push_back("\nAdd any two numbers.\n");
-    
+
     #ifdef _WIN32
         system("cls");
     #else
         std::cout << "\x1B[2J\x1B[H";
     #endif
-   
+
     for (const std::string& word : msg) {
         std::cout << " " << word;
     }
@@ -92,6 +92,9 @@ int main() {
         std::cout << "Too many invalid attempts for b. Exiting." << std::endl;
         return 1;
     }
+
+    /// @todo This is a thing to do.
+    
 
     // Debug and compute
     std::cout << "Calling function with a=" << a << ", b=" << b << std::endl;
