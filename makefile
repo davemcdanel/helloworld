@@ -18,6 +18,9 @@
 #	2021-06-19 - Added install, uninstall, dummy init and fixed typos. DLM
 #	2024-12-01 - Added define "BUILD_SYSTEM_OKAY" to be used with VSCODE.
 #   2025-01-26 - Modified install, target as install directory name.
+#   2025-02-23 - Added doxygen, again. DLM
+#   2025-02-23 - Modified to keep ./docs with PlaceHolder.txt, added docsclean target. 
+#	2025-02-23 - Added DOCDIR for documentation directory. DLM
 # ------------------------------------------------
 
 # project name (generate executable with this name)
@@ -34,12 +37,14 @@ SRCDIR = ./Source_Files
 HDRDIR = ./Header_Files
 OBJDIR = ./obj
 BINDIR = ./bin
+DOCDIR = ./docs
 
 SOURCES := $(wildcard $(SRCDIR)/*.cpp)
 OBJECTS := $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 DEPS := $(OBJECTS:.o=.d)
 
 rm = rm -f
+FIND = /usr/bin/find
 
 CC = g++
 # compiling flags here
@@ -68,6 +73,24 @@ clean:
 	@echo "Object cleanup complete!"
 	@$(rm) $(BINDIR)/$(TARGET)
 	@echo "Executable removed!"
+
+.PHONY: docsclean
+docsclean:
+	@test -d $(DOCDIR) && cd $(DOCDIR) && $(FIND) . -type f -not -name "PlaceHolder.txt" -exec rm -f {} \;
+	@test -d $(DOCDIR) && cd $(DOCDIR) && $(FIND) . -type d -not -path . -exec rmdir {} \; 2>/dev/null || true
+	@echo "Documentation cleaned, preserving PlaceHolder.txt!"
+
+.PHONY: docsinit
+docsinit:
+	@test -d $(DOCDIR) || mkdir $(DOCDIR)
+	@test -f $(DOCDIR)/PlaceHolder.txt || echo "Placeholder for docs directory" > $(DOCDIR)/PlaceHolder.txt
+	@echo "$(DOCDIR)/PlaceHolder.txt created!"
+
+.PHONY: docs
+docs: docsinit docsclean
+	@sed -i '/^OUTPUT_DIRECTORY[ \t]*=/c\OUTPUT_DIRECTORY = $(DOCDIR)' Doxyfile || echo "OUTPUT_DIRECTORY = $(DOCDIR)" >> Doxyfile
+	@doxygen Doxyfile
+	@echo "Doxygen documentation generated in $(DOCDIR)/"
 
 .PHONY: commit
 commit:

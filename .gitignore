@@ -1,6 +1,6 @@
-# Keep the doc folder but not the docs
-doc/*
-!doc/Doxyfile
+# Keep the docs folder but not the docs
+docs/*
+!docs/PlaceHolder.txt
 
 # ---> C++
 # Prerequisites

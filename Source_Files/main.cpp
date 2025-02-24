@@ -1,5 +1,6 @@
 /** Hello World! - For C++
  * \file main.cpp
+ * \brief Main entry point.
  * \mainpage Hello World! - For C++
  * \version 0.0.1
  * \brief C++ edition of the classic Hello World program. This version is used to test VSCODE with MSYS2 MinGW64 but should compile on most versions of C++.

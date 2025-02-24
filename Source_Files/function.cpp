@@ -1,5 +1,4 @@
-/**
- * @file function.cpp
+/** @file function.cpp
  * @author David McDanel
  * @brief Helper functions.
  * @version 0.1
