@@ -22,10 +22,8 @@
 #   2025-02-23 - Modified to keep ./docs with PlaceHolder.txt, added docsclean target. 
 #	2025-02-23 - Added DOCDIR for documentation directory. DLM
 #	2025-02-25 - Added VERSION for single point version documentation.
+#	2025-02-26 - Added automatic version bumps
 # ------------------------------------------------
-
-VERSION_STRING = 0.0.24
-export VERSION_STRING
 
 # project name (generate executable with this name)
 TARGET ?= $(notdir $(shell pwd))
@@ -47,12 +45,17 @@ SOURCES := $(wildcard $(SRCDIR)/*.cpp)
 OBJECTS := $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 DEPS := $(OBJECTS:.o=.d)
 
+# Replace VERSION_STRING definition and all target
+# Read VERSION_STRING from version.h and update on build
+VERSION_STRING := $(shell grep 'define VERSION_STRING' $(HDRDIR)/version.h | sed 's/.*VERSION_STRING "\(.*\)"/\1/')
+export VERSION_STRING
+
 rm = rm -f
 FIND = /usr/bin/find
 
 CC = g++
 # compiling flags here
-CFLAGS = -I$(HDRDIR) -Wall -I. -g -O0 -DBUILD_SYSTEM_OKAY -DVERSION_STRING=\"$(VERSION_STRING)\" -MMD -MP
+CFLAGS = -I$(HDRDIR) -Wall -I. -g -O0 -DBUILD_SYSTEM_OKAY -MMD -MP
 
 LINKER = g++
 # linking flags here
@@ -69,20 +72,31 @@ $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 	@echo "Compiled "$<" successfully!"
 
 .PHONY: all
-all: $(HDRDIR)/version.h $(BINDIR)/$(TARGET)
+all: bump-version $(BINDIR)/$(TARGET)
 
-$(HDRDIR)/version.h:
-	@echo "//This file is automaticaly generated using the makefile.  Do not modify this file directly." > $(HDRDIR)/version.h
-	@echo "//Please use the varable name VERSION located in makefile in the project root." >> $(HDRDIR)/version.h
-	@echo "/** @file version.h" >> $(HDRDIR)/version.h
-	@echo " * @brief Version control file." >> $(HDRDIR)/version.h
-	@echo " * @version $(VERSION_STRING)" >> $(HDRDIR)/version.h
-	@echo " */" >> $(HDRDIR)/version.h
-	@echo "#ifndef VERSION_H" >> $(HDRDIR)/version.h
-	@echo "#define VERSION_H" >> $(HDRDIR)/version.h
-	@echo "#define VERSION_STRING \"$(VERSION_STRING)\"" >> $(HDRDIR)/version.h
-	@echo "#endif" >> $(HDRDIR)/version.h
-	@echo "Defined VERSION_STRING \"$(VERSION_STRING)\" in version.h"
+.PHONY: bump-version
+bump-version:
+	@CURRENT_VERSION=$$(grep 'define VERSION_STRING' $(HDRDIR)/version.h | sed 's/.*VERSION_STRING "\(.*\)"/\1/'); \
+	MAJOR=$$(echo $$CURRENT_VERSION | cut -d'.' -f1); \
+	MINOR=$$(echo $$CURRENT_VERSION | cut -d'.' -f2); \
+	PATCH=$$(echo $$CURRENT_VERSION | cut -d'.' -f3); \
+	NEW_PATCH=$$((PATCH + 1)); \
+	NEW_VERSION="$$MAJOR.$$MINOR.$$NEW_PATCH"; \
+	sed -i "s/VERSION_STRING \".*\"/VERSION_STRING \"$$NEW_VERSION\"/" $(HDRDIR)/version.h; \
+	echo "Updated version to $$NEW_VERSION in $(HDRDIR)/version.h"
+
+#$(HDRDIR)/version.h:
+#	@echo "//This file is automaticaly generated using the makefile.  Do not modify this file directly." > $(HDRDIR)/version.h
+#	@echo "//Please use the varable name VERSION located in makefile in the project root." >> $(HDRDIR)/version.h
+#	@echo "/** @file version.h" >> $(HDRDIR)/version.h
+#	@echo " * @brief Version control file." >> $(HDRDIR)/version.h
+#	@echo " * @version $(VERSION_STRING)" >> $(HDRDIR)/version.h
+#	@echo " */" >> $(HDRDIR)/version.h
+#	@echo "#ifndef VERSION_H" >> $(HDRDIR)/version.h
+#	@echo "#define VERSION_H" >> $(HDRDIR)/version.h
+#	@echo "#define VERSION_STRING \"$(VERSION_STRING)\"" >> $(HDRDIR)/version.h
+#	@echo "#endif" >> $(HDRDIR)/version.h
+#	@echo "Defined VERSION_STRING \"$(VERSION_STRING)\" in version.h"
 
 .PHONY: clean
 clean:
@@ -90,16 +104,16 @@ clean:
 	@echo "Object cleanup complete!"
 	@$(rm) $(BINDIR)/$(TARGET)
 	@echo "Executable removed!"
-	@$(rm) $(HDRDIR)/version.h
-	@echo "Removed version.h!"
+#	@$(rm) $(HDRDIR)/version.h
+#	@echo "Removed version.h!"
 
 .PHONY: docsclean
 docsclean:
 	@test -d $(DOCDIR) && cd $(DOCDIR) && $(FIND) . -type f -not -name "PlaceHolder.txt" -exec rm -f {} \;
 	@test -d $(DOCDIR) && cd $(DOCDIR) && $(FIND) . -type d -not -path . -exec rmdir {} \; 2>/dev/null || true
 	@echo "Documentation cleaned, preserving PlaceHolder.txt!"
-	@$(rm) $(HDRDIR)/version.h
-	@echo "Removed version.h!"
+#	@$(rm) $(HDRDIR)/version.h
+#	@echo "Removed version.h!"
 
 .PHONY: docsinit
 docsinit:
@@ -108,7 +122,7 @@ docsinit:
 	@echo "$(DOCDIR)/PlaceHolder.txt created!"
 
 .PHONY: docs
-docs: docsinit docsclean $(HDRDIR)/version.h
+docs: docsinit docsclean
 	@sed -i '/^INPUT[ \t]*=/c\INPUT = . $(SRCDIR) $(HDRDIR)' Doxyfile || echo "INPUT = . $(SRCDIR) $(HDRDIR)" >> Doxyfile
 	@sed -i '/^OUTPUT_DIRECTORY[ \t]*=/c\OUTPUT_DIRECTORY = $(DOCDIR)' Doxyfile || echo "OUTPUT_DIRECTORY = $(DOCDIR)" >> Doxyfile
 	@sed -i '/^ENABLE_PREPROCESSING[ \t]*=/c\ENABLE_PREPROCESSING = YES' Doxyfile || echo "ENABLE_PREPROCESSING = YES" >> Doxyfile
