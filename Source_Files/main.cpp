@@ -1,38 +1,43 @@
+#include "version.h"
 /** Hello World! - For C++
  * \file main.cpp
  * \brief Main entry point.
  * \mainpage Hello World! - For C++
- * \version 0.0.1
+ * \version \b $(VERSION_STRING)
  * \brief C++ edition of the classic Hello World program. This version is used to test VSCODE with MSYS2 MinGW64 but should compile on most versions of C++.
  * \author David Lee McDanel <smokepid@gmail.com>; <pidsynccontrol@gmail.com>
  * \date June 5, 2016, 9:36 AM
  * \copyright Copyright (c) 2021 David L. McDanel
- * This is free and unencumbered software released into the public domain.
+ * \n \n This is free and unencumbered software released into the public domain.
  * Anyone is free to copy, modify, publish, use, compile, sell, or
  * distribute this software, either in source code form or as a compiled
  * binary, for any purpose, commercial or non-commercial, and by any
  * means.
- * In jurisdictions that recognize copyright laws, the author or authors
+ * \n \n In jurisdictions that  recognize copyright laws, the author or authors
  * of this software dedicate any and all copyright interest in the
  * software to the public domain. We make this dedication for the benefit
- * of the public at large and to the detriment of our heirs and
- * successors. We intend this dedication to be an overt act of
- * relinquishment in perpetuity of all present and future rights to this
- * software under copyright law.
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * of the public at large and to the detriment of our heirs and successors.
+ * We intend this dedication to be an overt act of relinquishment in
+ * perpetuity of all present and future rights to this software under
+ * copyright law.
+ * \n \n THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
- * For more information, please refer to <http://unlicense.org>
+ * \n \n For more information, please refer to <http://unlicense.org>
  */
 
 #include <iostream>
 #include <vector>
 #include <string>
 #include <limits>
+
+#ifndef VERSION_STRING
+    #error "Verion not set.  Please configure makefile VERSION="
+#endif
 
 #ifndef BUILD_SYSTEM_OKAY
     #error "Build system not set up"
@@ -45,7 +50,7 @@
  * @return int Zero on sucsess, one on error. 
  */
 int main() {
-    std::vector<std::string> msg {"Hello", "C++", "World!", "\n"};
+    std::vector<std::string> msg {"Hello", "C++", "World!", VERSION_STRING, "\n"};
     msg.push_back("\nAdd any two numbers.\n");
 
     #ifdef _WIN32

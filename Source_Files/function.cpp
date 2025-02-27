@@ -1,7 +1,6 @@
 /** @file function.cpp
  * @author David McDanel
  * @brief Helper functions.
- * @version 0.1
  * @date 2025-02-23
  * 
  * @copyright Copyright (c) 2025
