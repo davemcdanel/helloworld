@@ -1,7 +1,7 @@
 # ------------------------------------------------
 # Generic Makefile
 #
-# Author: yanick.rochon@gmail.com
+# Author: yanick.rochon@gmail.com, 
 # Date  : 2011-08-10
 #
 # Changelog :
@@ -22,7 +22,16 @@
 #   2025-02-23 - Modified to keep ./docs with PlaceHolder.txt, added docsclean target. 
 #	2025-02-23 - Added DOCDIR for documentation directory. DLM
 #	2025-02-25 - Added VERSION for single point version documentation.
-#	2025-02-26 - Added automatic version bumps
+#	2025-02-26 - Added automatic version bumps.
+#	2025-02-27 - Allow overriding CC and LINKER via environment variables or command line.
+#				 Add a toggle for debug (-g -O0) vs. release (-O2)
+#				 Modified install and uninstall for Windows and Linux.
+#				 Added permissions warning for Unix install to /usr/bin requiring sudo.
+#                Added config file backup before overwriting during install.
+#                Added cleanup of empty config directory during uninstall.
+#                Quoted executable path in run target for paths with spaces.
+#                Fixed missing quote in VERSION_STRING definition in version.h.
+#                (Changes refined with assistance from Grok 3 by xAI)
 # ------------------------------------------------
 
 # project name (generate executable with this name)
@@ -50,18 +59,38 @@ DEPS := $(OBJECTS:.o=.d)
 VERSION_STRING := $(shell grep 'define VERSION_STRING' $(HDRDIR)/version.h | sed 's/.*VERSION_STRING "\(.*\)"/\1/')
 export VERSION_STRING
 
-rm = rm -f
+# Detect OS
+ifeq ($(OS),Windows_NT)
+    # Windows-specific settings
+    INSTALL_DIR = /c/Users/$(USERNAME)/AppData/Local/$(TARGET)
+    CONFIG_DIR = $(INSTALL_DIR)/config
+else
+    # Unix-specific settings
+    INSTALL_DIR = $(HOME)/bin
+    CONFIG_DIR = $(HOME)
+endif
+
+RM = rm -f
+MKDIR = mkdir -p
+INSTALL = install
 FIND = /usr/bin/find
 
-CC = g++
+CC ?= g++
 # compiling flags here
-CFLAGS = -I$(HDRDIR) -Wall -I. -g -O0 -DBUILD_SYSTEM_OKAY -MMD -MP
+CFLAGS = -I$(HDRDIR) -Wall -I. -DBUILD_SYSTEM_OKAY -MMD -MP
 
-LINKER = g++
+LINKER ?= g++
 # linking flags here
 #LFLAGS = -Wall -I. -lm -lpthread -lpigpio -lrt
 #LFLAGS = -Wall -I. -lm -lpthread -Wl,-subsystem,windows
 LFLAGS   = -Wall -I. -lm -lpthread
+
+BUILD_TYPE ?= debug
+ifeq ($(BUILD_TYPE),release)
+    CFLAGS += -O2
+else
+    CFLAGS += -g -O0
+endif
 
 $(BINDIR)/$(TARGET): $(OBJECTS)
 	@$(LINKER) $(OBJECTS) $(LFLAGS) -o $@
@@ -72,10 +101,10 @@ $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 	@echo "Compiled "$<" successfully!"
 
 .PHONY: all
-all: bump-version $(BINDIR)/$(TARGET)
+all: check-tools bump-version $(BINDIR)/$(TARGET)
 
 .PHONY: bump-version
-bump-version:
+bump-version: $(HDRDIR)/version.h
 	@CURRENT_VERSION=$$(grep 'define VERSION_STRING' $(HDRDIR)/version.h | sed 's/.*VERSION_STRING "\(.*\)"/\1/'); \
 	MAJOR=$$(echo $$CURRENT_VERSION | cut -d'.' -f1); \
 	MINOR=$$(echo $$CURRENT_VERSION | cut -d'.' -f2); \
@@ -85,35 +114,34 @@ bump-version:
 	sed -i "s/VERSION_STRING \".*\"/VERSION_STRING \"$$NEW_VERSION\"/" $(HDRDIR)/version.h; \
 	echo "Updated version to $$NEW_VERSION in $(HDRDIR)/version.h"
 
-#$(HDRDIR)/version.h:
-#	@echo "//This file is automaticaly generated using the makefile.  Do not modify this file directly." > $(HDRDIR)/version.h
-#	@echo "//Please use the varable name VERSION located in makefile in the project root." >> $(HDRDIR)/version.h
-#	@echo "/** @file version.h" >> $(HDRDIR)/version.h
-#	@echo " * @brief Version control file." >> $(HDRDIR)/version.h
-#	@echo " * @version $(VERSION_STRING)" >> $(HDRDIR)/version.h
-#	@echo " */" >> $(HDRDIR)/version.h
-#	@echo "#ifndef VERSION_H" >> $(HDRDIR)/version.h
-#	@echo "#define VERSION_H" >> $(HDRDIR)/version.h
-#	@echo "#define VERSION_STRING \"$(VERSION_STRING)\"" >> $(HDRDIR)/version.h
-#	@echo "#endif" >> $(HDRDIR)/version.h
-#	@echo "Defined VERSION_STRING \"$(VERSION_STRING)\" in version.h"
+$(HDRDIR)/version.h:
+	@echo "/** @file version.h" >> $@
+	@echo " * @brief Auto-generated version file.  Do not modify this file directly." >> $@
+	@echo " * @version $(VERSION_STRING)" >> $@
+	@echo " */" >> $@
+	@echo "#ifndef VERSION_H" >> $@
+	@echo "#define VERSION_H" >> $@
+	@echo "#define VERSION_STRING \"0.0.1\"" >> $@
+	@echo "#endif" >> $@
+	@echo "Created initial $(HDRDIR)/version.h with version 0.0.1"
 
 .PHONY: clean
 clean:
-	@$(rm) $(OBJECTS) $(DEPS)
+	@$(RM) $(OBJECTS) $(DEPS)
 	@echo "Object cleanup complete!"
-	@$(rm) $(BINDIR)/$(TARGET)
+	@$(RM) $(BINDIR)/$(TARGET)
 	@echo "Executable removed!"
-#	@$(rm) $(HDRDIR)/version.h
-#	@echo "Removed version.h!"
+
+.PHONY: check-tools 
+check-tools:
+	@command -v $(CC) >/dev/null 2>&1 || { echo "Error: $(CC) not found"; exit 1; }
+	@command -v doxygen >/dev/null 2>&1 || { echo "Warning: doxygen not found, 'docs' target will fail"; }
 
 .PHONY: docsclean
 docsclean:
 	@test -d $(DOCDIR) && cd $(DOCDIR) && $(FIND) . -type f -not -name "PlaceHolder.txt" -exec rm -f {} \;
 	@test -d $(DOCDIR) && cd $(DOCDIR) && $(FIND) . -type d -not -path . -exec rmdir {} \; 2>/dev/null || true
 	@echo "Documentation cleaned, preserving PlaceHolder.txt!"
-#	@$(rm) $(HDRDIR)/version.h
-#	@echo "Removed version.h!"
 
 .PHONY: docsinit
 docsinit:
@@ -151,22 +179,41 @@ pull:
 
 .PHONY: run
 run: $(BINDIR)/$(TARGET)
-	$(BINDIR)/$(TARGET)
+	"$(BINDIR)/$(TARGET)"
 
 .PHONY: install
-install:
-	@$(rm) C:\Users\$(USERNAME)\appdata\Local\$(TARGET_DIR)\$(TARGET)
-	@install $(BINDIR)/$(TARGET) C:\Users\$(USERNAME)\appdata\Local\$(TARGET_DIR)\
-	@rm -fr $(HOMEDIR)/.$(TARGET)/
-	@install -d $(HOMEDIR)/.$(TARGET)/
-	@install $(TARGET_DIR)/.$(TARGET)/$(TARGET).conf $(HOMEDIR)/.$(TARGET)/$(TARGET).conf
-	@echo Configuration file located $(HOMEDIR)/.$(TARGET)/.$(TARGET).conf
-	@echo "$(TARGET) installed to C:\Users\$(USERNAME)\appdata\Local\$(TARGET_DIR)\ Install complete!"
+install: $(TARGET_DIR)/.$(TARGET)/$(TARGET).conf $(BINDIR)/$(TARGET)
+	@if [ "$(INSTALL_DIR)" = "/usr/bin" ] && [ ! -w "$(INSTALL_DIR)" ]; then \
+		echo "Warning: $(INSTALL_DIR) requires sudo; run 'sudo make install'"; \
+		exit 1; \
+	fi
+	@$(MKDIR) "$(INSTALL_DIR)" || { echo "Error: Failed to create $(INSTALL_DIR)"; exit 1; }
+	@$(INSTALL) $(BINDIR)/$(TARGET) "$(INSTALL_DIR)/"
+	@$(MKDIR) "$(CONFIG_DIR)" || { echo "Error: Failed to create $(CONFIG_DIR)"; exit 1; }
+	@if [ -f "$(CONFIG_DIR)/$(TARGET).conf" ]; then \
+		cp "$(CONFIG_DIR)/$(TARGET).conf" "$(CONFIG_DIR)/$(TARGET).conf.bak"; \
+		echo "Backed up existing config to $(CONFIG_DIR)/$(TARGET).conf.bak"; \
+	fi
+	@$(INSTALL) $(TARGET_DIR)/.$(TARGET)/$(TARGET).conf "$(CONFIG_DIR)/$(TARGET).conf" || \
+		{ echo "Warning: Config file not found, skipping"; }
+	@echo "Installed $(TARGET) to $(INSTALL_DIR)"
+	@echo "Configuration file placed at $(CONFIG_DIR)/$(TARGET).conf"
 
 .PHONY: uninstall
 uninstall:
-	@rm C:\Users\$(USERNAME)\appdata\Local\$(TARGET_DIR)\$(TARGET)\$(TARGET)
-	@echo "$(TARGET) removed from C:\Users\$(USERNAME)\appdata\Local\$(TARGET_DIR)\ Uninstall complete!"
+	@$(RM) "$(INSTALL_DIR)/$(TARGET)"
+	@$(RM) "$(CONFIG_DIR)/$(TARGET).conf"
+	@if [ -d "$(CONFIG_DIR)" ] && [ -z "$$(ls -A "$(CONFIG_DIR)")" ]; then \
+		rmdir "$(CONFIG_DIR)"; \
+		echo "Removed empty $(CONFIG_DIR)"; \
+	fi
+	@echo "Uninstalled $(TARGET) from $(INSTALL_DIR)"
+	@echo "Removed config from $(CONFIG_DIR)"
+
+$(TARGET_DIR)/.$(TARGET)/$(TARGET).conf:
+	@mkdir -p $(TARGET_DIR)/.$(TARGET)
+	@echo "# Default config for $(TARGET)" > $@
+	@echo "Created default config at $@"
 
 .PHONY: init
 init:

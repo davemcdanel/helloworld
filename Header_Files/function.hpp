@@ -17,7 +17,7 @@
  * @param a First integer
  * @param b Second integer
  * @return int Sum of a and b
- */
+ */ 
 int function(int a,int b);
 
 /** @brief Get integer input using std::cin.
