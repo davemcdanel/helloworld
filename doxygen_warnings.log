@@ -1,42 +1,28 @@
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:5: warning: unable to resolve reference to 'table-of-contents' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:16: warning: unable to resolve reference to 'code-of-conduct' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:17: warning: unable to resolve reference to 'i-have-a-question' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:18: warning: unable to resolve reference to 'i-want-to-contribute' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:19: warning: unable to resolve reference to 'reporting-bugs' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:20: warning: unable to resolve reference to 'suggesting-enhancements' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:21: warning: unable to resolve reference to 'your-first-code-contribution' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:22: warning: unable to resolve reference to 'improving-the-documentation' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:23: warning: unable to resolve reference to 'styleguides' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:24: warning: unable to resolve reference to 'commit-messages' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:25: warning: unable to resolve reference to 'join-the-project-team' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:31: warning: unable to resolve reference to 'blob/main/CODE_OF_CONDUCT.md' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:37: warning: unable to resolve reference to 'blob/main/README.md' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:64: warning: unable to resolve reference to 'i-have-a-question' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:91: warning: unable to resolve reference to 'your-first-code-contribution' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:5: warning: unable to resolve reference to 'table-of-contents' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:16: warning: unable to resolve reference to 'code-of-conduct' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:17: warning: unable to resolve reference to 'i-have-a-question' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:18: warning: unable to resolve reference to 'i-want-to-contribute' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:19: warning: unable to resolve reference to 'reporting-bugs' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:20: warning: unable to resolve reference to 'suggesting-enhancements' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:21: warning: unable to resolve reference to 'your-first-code-contribution' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:22: warning: unable to resolve reference to 'improving-the-documentation' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:23: warning: unable to resolve reference to 'styleguides' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:24: warning: unable to resolve reference to 'commit-messages' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:25: warning: unable to resolve reference to 'join-the-project-team' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:31: warning: unable to resolve reference to 'blob/main/CODE_OF_CONDUCT.md' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:37: warning: unable to resolve reference to 'blob/main/README.md' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:64: warning: unable to resolve reference to 'i-have-a-question' for \ref command
-C:/Users/dave/Projects/helloworld/CONTRIBUTING.md:91: warning: unable to resolve reference to 'your-first-code-contribution' for \ref command
-C:/Users/dave/Projects/helloworld/README.md:10: warning: Found unknown command '\msys64'
-C:/Users/dave/Projects/helloworld/README.md:10: warning: Found unknown command '\ucrt64'
-C:/Users/dave/Projects/helloworld/README.md:10: warning: Found unknown command '\bin'
-C:/Users/dave/Projects/helloworld/README.md:11: warning: Found unknown command '\msys64'
-C:/Users/dave/Projects/helloworld/README.md:11: warning: Found unknown command '\usr'
-C:/Users/dave/Projects/helloworld/README.md:11: warning: Found unknown command '\bin'
-C:/Users/dave/Projects/helloworld/README.md:10: warning: Found unknown command '\msys64'
-C:/Users/dave/Projects/helloworld/README.md:10: warning: Found unknown command '\ucrt64'
-C:/Users/dave/Projects/helloworld/README.md:10: warning: Found unknown command '\bin'
-C:/Users/dave/Projects/helloworld/README.md:11: warning: Found unknown command '\msys64'
-C:/Users/dave/Projects/helloworld/README.md:11: warning: Found unknown command '\usr'
-C:/Users/dave/Projects/helloworld/README.md:11: warning: Found unknown command '\bin'
+C:/Projects/helloworld/CONTRIBUTING.md:5: warning: unable to resolve reference to 'table-of-contents' for \ref command
+C:/Projects/helloworld/CONTRIBUTING.md:16: warning: unable to resolve reference to 'contributing' for \ref command
+C:/Projects/helloworld/CONTRIBUTING.md:17: warning: unable to resolve reference to 'table-of-contents' for \ref command
+C:/Projects/helloworld/CONTRIBUTING.md:18: warning: unable to resolve reference to 'code-of-conduct' for \ref command
+C:/Projects/helloworld/CONTRIBUTING.md:19: warning: unable to resolve reference to 'i-have-a-question' for \ref command
+C:/Projects/helloworld/CONTRIBUTING.md:20: warning: unable to resolve reference to 'i-want-to-contribute' for \ref command
+C:/Projects/helloworld/CONTRIBUTING.md:21: warning: unable to resolve reference to 'reporting-bugs' for \ref command
+C:/Projects/helloworld/CONTRIBUTING.md:22: warning: unable to resolve reference to 'before-submitting-a-bug-report' for \ref command
+C:/Projects/helloworld/CONTRIBUTING.md:23: warning: unable to resolve reference to 'how-do-i-submit-a-good-bug-report' for \ref command
+C:/Projects/helloworld/CONTRIBUTING.md:24: warning: unable to resolve reference to 'suggesting-enhancements' for \ref command
+C:/Projects/helloworld/CONTRIBUTING.md:25: warning: unable to resolve reference to 'before-submitting-an-enhancement' for \ref command
+C:/Projects/helloworld/CONTRIBUTING.md:26: warning: unable to resolve reference to 'how-do-i-submit-a-good-enhancement-suggestion' for \ref command
+C:/Projects/helloworld/CONTRIBUTING.md:27: warning: unable to resolve reference to 'your-first-code-contribution' for \ref command
+C:/Projects/helloworld/CONTRIBUTING.md:28: warning: unable to resolve reference to 'improving-the-documentation' for \ref command
+C:/Projects/helloworld/CONTRIBUTING.md:29: warning: unable to resolve reference to 'styleguides' for \ref command
+C:/Projects/helloworld/CONTRIBUTING.md:30: warning: unable to resolve reference to 'commit-messages' for \ref command
+C:/Projects/helloworld/CONTRIBUTING.md:31: warning: unable to resolve reference to 'join-the-project-team' for \ref command
+C:/Projects/helloworld/CONTRIBUTING.md:32: warning: unable to resolve reference to 'attribution' for \ref command
+C:/Projects/helloworld/CONTRIBUTING.md:38: warning: unable to resolve reference to 'blob/main/CODE_OF_CONDUCT.md' for \ref command
+C:/Projects/helloworld/CONTRIBUTING.md:44: warning: unable to resolve reference to 'blob/main/README.md' for \ref command
+C:/Projects/helloworld/CONTRIBUTING.md:71: warning: unable to resolve reference to 'i-have-a-question' for \ref command
+C:/Projects/helloworld/CONTRIBUTING.md:98: warning: unable to resolve reference to 'your-first-code-contribution' for \ref command
+C:/Projects/helloworld/README.md:12: warning: Found unknown command '\msys64'
+C:/Projects/helloworld/README.md:12: warning: Found unknown command '\ucrt64'
+C:/Projects/helloworld/README.md:12: warning: Found unknown command '\bin'
+C:/Projects/helloworld/README.md:13: warning: Found unknown command '\msys64'
+C:/Projects/helloworld/README.md:13: warning: Found unknown command '\usr'
+C:/Projects/helloworld/README.md:13: warning: Found unknown command '\bin'

@@ -2,6 +2,9 @@
 docs/*
 !docs/PlaceHolder.txt
 
+# Don't keep the doxygen warnings log
+doxygen_warnings.log
+
 # ---> C++
 # Prerequisites
 *.d

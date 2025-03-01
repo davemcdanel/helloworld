@@ -37,6 +37,7 @@
 # project name (generate executable with this name)
 TARGET ?= $(notdir $(shell pwd))
 TARGET_DIR = $(shell pwd)
+PROJECT_NAME = "Hello World! - For C++"
 
 BUILDID=$(shell date +%Y%m%d-%H:%M:%S)
 COMMIT_COMMENT?='Automatic commit of successful build.'
@@ -159,6 +160,7 @@ docs: docsinit docsclean
 	@sed -i '/^EXPAND_AS_DEFINED[ \t]*=/c\EXPAND_AS_DEFINED = VERSION_STRING' Doxyfile || echo "EXPAND_AS_DEFINED = VERSION_STRING" >> Doxyfile
 	@sed -i '/^PREDEFINED[ \t]*=/c\PREDEFINED =' Doxyfile || echo "PREDEFINED =" >> Doxyfile
 	@sed -i '/^PROJECT_NUMBER[ \t]*=/c\PROJECT_NUMBER = \"$(VERSION_STRING)\"' Doxyfile || echo "PROJECT_NUMBER = \"$(VERSION_STRING)\"" >> Doxyfile
+	@sed -i '/^PROJECT_NAME[ \t]*=/c\PROJECT_NAME = $(PROJECT_NAME)' Doxyfile || echo "PROJECT_NAME = \"$(PROJECT_NAME)\"" >> Doxyfile
 	@doxygen Doxyfile
 	@echo "Doxygen documentation generated in $(DOCDIR)/"
 
