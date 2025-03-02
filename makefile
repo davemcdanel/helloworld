@@ -120,6 +120,8 @@ bump-version: $(HDRDIR)/version.h
 $(HDRDIR)/version.h:
 	@echo "/** @file version.h" >> $@
 	@echo " * @brief Auto-generated version file.  Do not modify this file directly." >> $@
+	@echo " * @copyright Copyright (c) 2025 David Lee McDanel" >> $@
+	@echo " * @n @n This is free and unencumbered software released into the public domain under the Unlicense (see LICENSE.md)." >> $@
 	@echo " */" >> $@
 	@echo "#ifndef VERSION_H" >> $@
 	@echo "#define VERSION_H" >> $@

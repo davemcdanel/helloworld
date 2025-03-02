@@ -3,7 +3,8 @@
  * @brief Helper function prototypes.
  * @date 2025-02-23
  * 
- * @copyright Copyright (c) 2025
+ * @copyright Copyright (c) 2025 David Lee McDanel
+ * @n @n This is free and unencumbered software released into the public domain under the Unlicense (see LICENSE.md).
  * 
  */
 #ifndef FUNCTION_HPP

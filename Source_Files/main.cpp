@@ -47,7 +47,7 @@
 
 /** @brief Main program entry point.
  * 
- * @return int Zero on sucsess, one on error. 
+ * @return int Zero on success, one on error. 
  */
 int main() {
     std::vector<std::string> msg {"Hello", "C++", "World!", VERSION_STRING, "\n"};

@@ -9,6 +9,15 @@
 			"*.dox": "doxygen",
 			"vector": "cpp",
 			"limits": "cpp"
-		}
+		},
+		"cSpell.words": [
+			"BUILDID",
+			"DBUILD",
+			"docsclean",
+			"docsinit",
+			"HDRDIR",
+			"lpigpio",
+			"lpthread"
+		]
 	}
 }
