@@ -36,7 +36,7 @@
 #include <limits>
 
 #ifndef VERSION_STRING
-    #error "Verion not set.  Please configure makefile VERSION_STRING="
+    #error "Version not set.  Please configure makefile VERSION_STRING="
 #endif
 
 #ifndef BUILD_SYSTEM_OKAY

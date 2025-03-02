@@ -1,28 +1,28 @@
 # ------------------------------------------------
-# Generic Makefile
+# Project Makefile (Maintained by David Lee McDanel)
+# Date  : 2025-03-01
+# License: CC BY-SA 3.0 (inherited from original work)
+# ------------------------------------------------
 #
-# Author: yanick.rochon@gmail.com, 
-# Date  : 2011-08-10
-#
+# ------------------------------------------------
 # Changelog :
-#   2010-11-05 - first version
-#   2011-08-10 - added structure : sources, objects, binaries
-#                thanks to http://stackoverflow.com/users/128940/beta
-#   2017-04-24 - changed order of linker params
-#   2018-05-05 - Changed to C++, added target based upon project root - David Lee McDanel
+#   2010-11-05 - First version by yanick.rochon@gmail.com
+#   2011-08-10 - Added src/obj/bin structure (thanks to Beta http://stackoverflow.com/users/128940/beta)
+#   2017-04-24 - changed order of linker params - David Lee McDanel
+#   2018-05-05 - Changed to C++, added target based upon project root DLM
 #   2018-07-14 - Added phony; all, clean, remove, commit and run. DLM
 #	2019-09-16 - Added pull and push. DLM
 #   2019-09-28 - Added doxygen. DLM
 #   2020-04-11 - Removed doxygen and related wiki git items.  Created new repo for documentation. DLM
 #	2020-04-11 - Added ability to add git comments to the commit. DLM
 #	2021-06-19 - Added install, uninstall, dummy init and fixed typos. DLM
-#	2024-12-01 - Added define "BUILD_SYSTEM_OKAY" to be used with VSCODE.
-#   2025-01-26 - Modified install, target as install directory name.
+#	2024-12-01 - Added define "BUILD_SYSTEM_OKAY" to be used with VSCODE. DLM
+#   2025-01-26 - Modified install, target as install directory name. DLM
 #   2025-02-23 - Added doxygen, again. DLM
-#   2025-02-23 - Modified to keep ./docs with PlaceHolder.txt, added docsclean target. 
+#   2025-02-23 - Modified to keep ./docs with PlaceHolder.txt, added docsclean target. DLM
 #	2025-02-23 - Added DOCDIR for documentation directory. DLM
-#	2025-02-25 - Added VERSION for single point version documentation.
-#	2025-02-26 - Added automatic version bumps.
+#	2025-02-25 - Added VERSION for single point version documentation. DLM
+#	2025-02-26 - Added automatic version bumps. DLM
 #	2025-02-27 - Allow overriding CC and LINKER via environment variables or command line.
 #				 Add a toggle for debug (-g -O0) vs. release (-O2)
 #				 Modified install and uninstall for Windows and Linux.
@@ -31,7 +31,9 @@
 #                Added cleanup of empty config directory during uninstall.
 #                Quoted executable path in run target for paths with spaces.
 #                Fixed missing quote in VERSION_STRING definition in version.h.
-#                (Changes refined with assistance from Grok 3 by xAI)
+#                (Changes refined with assistance from Grok 3 by xAI) DLM
+#	2025-03-01 - Changed title of the makefile. DLM
+#				 Changed CC to CXX and CFLAGS to CXXFLAGS. DLM
 # ------------------------------------------------
 
 # project name (generate executable with this name)
@@ -76,9 +78,9 @@ MKDIR = mkdir -p
 INSTALL = install
 FIND = /usr/bin/find
 
-CC ?= g++
+CXX ?= g++
 # compiling flags here
-CFLAGS = -I$(HDRDIR) -Wall -I. -DBUILD_SYSTEM_OKAY -MMD -MP
+CXXFLAGS = -std=c++17 -I$(HDRDIR) -Wall -I. -DBUILD_SYSTEM_OKAY -MMD -MP
 
 LINKER ?= g++
 # linking flags here
@@ -88,9 +90,9 @@ LFLAGS   = -Wall -I. -lm -lpthread
 
 BUILD_TYPE ?= debug
 ifeq ($(BUILD_TYPE),release)
-    CFLAGS += -O2
+    CXXFLAGS += -O2
 else
-    CFLAGS += -g -O0
+    CXXFLAGS += -g -O0
 endif
 
 $(BINDIR)/$(TARGET): $(OBJECTS)
@@ -98,7 +100,7 @@ $(BINDIR)/$(TARGET): $(OBJECTS)
 	@echo "Linking complete!"
 
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo "Compiled "$<" successfully!"
 
 .PHONY: all
@@ -118,7 +120,6 @@ bump-version: $(HDRDIR)/version.h
 $(HDRDIR)/version.h:
 	@echo "/** @file version.h" >> $@
 	@echo " * @brief Auto-generated version file.  Do not modify this file directly." >> $@
-	@echo " * @version $(VERSION_STRING)" >> $@
 	@echo " */" >> $@
 	@echo "#ifndef VERSION_H" >> $@
 	@echo "#define VERSION_H" >> $@
@@ -135,7 +136,7 @@ clean:
 
 .PHONY: check-tools 
 check-tools:
-	@command -v $(CC) >/dev/null 2>&1 || { echo "Error: $(CC) not found"; exit 1; }
+	@command -v $(CXX) >/dev/null 2>&1 || { echo "Error: $(CXX) not found"; exit 1; }
 	@command -v doxygen >/dev/null 2>&1 || { echo "Warning: doxygen not found, 'docs' target will fail"; }
 
 .PHONY: docsclean
