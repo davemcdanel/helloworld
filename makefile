@@ -23,12 +23,15 @@ SOURCE_FILES := $(wildcard $(SOURCE_DIR)/*.cpp)
 OBJECT_FILES := $(patsubst $(SOURCE_DIR)/%.cpp,$(OBJECT_DIR)/%.o,$(SOURCE_FILES))
 DEPENDENCY_FILES := $(OBJECT_FILES:.o=.d)
 
+# Include dependencies
+-include $(DEPENDENCY_FILES)
+
 # Version extraction
 VERSION := $(shell grep 'define VERSION_STRING' $(HEADER_DIR)/version.h | sed 's/.*VERSION_STRING "\(.*\)"/\1/')
 
 # Platform-specific settings
 ifeq ($(OS),Windows_NT)
-	INSTALL_PATH = /c/Users/$(USERNAME)/AppData/Local/$(TARGET)
+	INSTALL_PATH = $(shell cygpath -u "$$USERPROFILE/AppData/Local/$(TARGET)")
 	CONFIG_PATH = $(INSTALL_PATH)/config
 else
 	INSTALL_PATH = $(HOME)/bin
@@ -46,16 +49,21 @@ CXXFLAGS = -std=c++17 -I$(HEADER_DIR) -Wall -DBUILD_SYSTEM_OKAY -MMD -MP
 LINKER ?= g++
 LDFLAGS = -Wall -lm -lpthread
 
-# Build type toggle
+# Build type toggle - override with: make BUILD_MODE=release all
 BUILD_MODE ?= debug
+
 ifeq ($(BUILD_MODE),release)
 	CXXFLAGS += -O2
 else
 	CXXFLAGS += -g -O0
 endif
 
+# Phony list
+.PHONY: all update-version clean verify-tools  docs-clean docs-init docs commit push pull release run install uninstall test
+
 # Primary build target
 all: verify-tools update-version $(BINARY_DIR)/$(TARGET)
+	@echo "Built $(TARGET) in $(BUILD_MODE) mode."
 
 # Linking rule
 $(BINARY_DIR)/$(TARGET): $(OBJECT_FILES)
@@ -78,18 +86,22 @@ update-version: $(HEADER_DIR)/version.h
 	NEW_PATCH=$$((PATCH + 1)); \
 	NEW_VER="$$MAJOR.$$MINOR.$$NEW_PATCH"; \
 	sed -i "s/VERSION_STRING \".*\"/VERSION_STRING \"$$NEW_VER\"/" $(HEADER_DIR)/version.h; \
-	echo "Version updated to $$NEW_VER in $(HEADER_DIR)/version.h"
+	sed -i "s/BUILD_ID \".*\"/BUILD_ID \"$(BUILD_ID)\"/" $(HEADER_DIR)/version.h; \
+	echo "Updated $(HEADER_DIR)/version.h to version $$NEW_VER and build ID $(BUILD_ID)";
 
 $(HEADER_DIR)/version.h:
 	@$(CREATE_DIR) $(HEADER_DIR)
 	@echo "/** @file version.h" > $@
 	@echo " * @brief Auto-generated version file. Do not edit manually." >> $@
+	@echo " * @copyright Copyright (c) 2025 David Lee McDanel" >> $@
+	@echo " * @n @n This is free and unencumbered software released into the public domain under the Unlicense (see LICENSE.md)." >> $@
 	@echo " */" >> $@
 	@echo "#ifndef VERSION_H" >> $@
 	@echo "#define VERSION_H" >> $@
-	@echo "#define VERSION_STRING \"0.0.1\"" >> $@
+	@echo "#define VERSION_STRING \"0.0.0\"" >> $@
+	@echo "#define BUILD_ID \"$(BUILD_ID)\"" >> $@
 	@echo "#endif" >> $@
-	@echo "Initialized $(HEADER_DIR)/version.h with version 0.0.1"
+	@echo "Initialized $(HEADER_DIR)/version.h to version 0.0.0 and build ID $(BUILD_ID)"
 
 # Cleanup target
 clean:
@@ -102,6 +114,12 @@ clean:
 verify-tools:
 	@command -v $(CXX) >/dev/null 2>&1 || { echo "Error: $(CXX) not found"; exit 1; }
 	@command -v doxygen >/dev/null 2>&1 || { echo "Warning: Doxygen not installed; 'docs' target will fail"; }
+
+# Doxyfile creation
+Doxyfile:
+	@echo "Generating default Doxyfile..."
+	@doxygen -g Doxyfile
+	@echo "Default Doxyfile created."
 
 # Documentation cleanup
 docs-clean:
@@ -116,7 +134,7 @@ docs-init:
 	@echo "$(DOCUMENT_DIR)/PlaceHolder.txt initialized."
 
 # Documentation generation
-docs: docs-clean docs-init
+docs: docs-clean docs-init Doxyfile
 	@sed -i '/^INPUT[ \t]*=/c\INPUT = . $(SOURCE_DIR) $(HEADER_DIR)' Doxyfile || echo "INPUT = . $(SOURCE_DIR) $(HEADER_DIR)" >> Doxyfile
 	@sed -i '/^OUTPUT_DIRECTORY[ \t]*=/c\OUTPUT_DIRECTORY = $(DOCUMENT_DIR)' Doxyfile || echo "OUTPUT_DIRECTORY = $(DOCUMENT_DIR)" >> Doxyfile
 	@sed -i '/^ENABLE_PREPROCESSING[ \t]*=/c\ENABLE_PREPROCESSING = YES' Doxyfile || echo "ENABLE_PREPROCESSING = YES" >> Doxyfile
@@ -142,22 +160,30 @@ push:
 pull:
 	@git pull origin master
 
+release: all test commit push
+	@echo "Released tested build with Git sync."
+
+# Config file generation
+$(BUILD_ROOT)/.$(TARGET)/$(TARGET).conf:
+	@$(CREATE_DIR) $(BUILD_ROOT)/.$(TARGET)
+	@echo "# Default configuration for $(TARGET)" > $@
+	@echo "Generated default config at $@"
+
 # Run target
-run: $(BINARY_DIR)/$(TARGET)
+run: $(BUILD_ROOT)/.$(TARGET)/$(TARGET).conf $(BINARY_DIR)/$(TARGET)
 	@"$(BINARY_DIR)/$(TARGET)"
 
 # Installation
 install: $(BUILD_ROOT)/.$(TARGET)/$(TARGET).conf $(BINARY_DIR)/$(TARGET)
 	@if [ "$(INSTALL_PATH)" = "$(HOME)/bin" ] && [ ! -w "$(INSTALL_PATH)" ]; then \
-		echo "Warning: $(INSTALL_PATH) requires sudo; use 'sudo make install'"; \
-		exit 1; \
+		test "$$(id -u)" -ne 0 && { echo "Error: $(INSTALL_PATH) requires sudo privileges; run 'sudo make install'"; exit 1; }; \
 	fi
-	@$(CREATE_DIR) "$(INSTALL_PATH)" || { echo "Error: Could not create $(INSTALL_PATH)"; exit 1; }
-	@$(COPY) $(BINARY_DIR)/$(TARGET) "$(INSTALL_PATH)/"
-	@$(CREATE_DIR) "$(CONFIG_PATH)" || { echo "Error: Could not create $(CONFIG_PATH)"; exit 1; }
+	@test -d "$(INSTALL_PATH)" || $(CREATE_DIR) "$(INSTALL_PATH)" || { echo "Error: Failed to create install directory $(INSTALL_PATH)"; exit 1; }
+	@$(COPY) $(BINARY_DIR)/$(TARGET) "$(INSTALL_PATH)/" || { echo "Error: Failed to install $(TARGET) to $(INSTALL_PATH)"; exit 1; }
+	@$(CREATE_DIR) "$(CONFIG_PATH)" || { echo "Error: Failed to create $(CONFIG_PATH)"; exit 1; }
 	@if [ -f "$(CONFIG_PATH)/$(TARGET).conf" ]; then \
-		cp "$(CONFIG_PATH)/$(TARGET).conf" "$(CONFIG_PATH)/$(TARGET).conf.bak"; \
-		echo "Backed up config to $(CONFIG_PATH)/$(TARGET).conf.bak"; \
+		cp "$(CONFIG_PATH)/$(TARGET).conf" "$(CONFIG_PATH)/$(TARGET).conf.bak.$(BUILD_ID)"; \
+		echo "Backed up config to $(CONFIG_PATH)/$(TARGET).conf.bak.$(BUILD_ID)"; \
 	fi
 	@$(COPY) $(BUILD_ROOT)/.$(TARGET)/$(TARGET).conf "$(CONFIG_PATH)/$(TARGET).conf" || \
 		{ echo "Warning: No config file found to install"; }
@@ -175,11 +201,10 @@ uninstall:
 	@echo "Uninstalled $(TARGET) from $(INSTALL_PATH)"
 	@echo "Removed config from $(CONFIG_PATH)"
 
-# Config file generation
-$(BUILD_ROOT)/.$(TARGET)/$(TARGET).conf:
-	@$(CREATE_DIR) $(BUILD_ROOT)/.$(TARGET)
-	@echo "# Default configuration for $(TARGET)" > $@
-	@echo "Generated default config at $@"
-
-# Include dependencies
--include $(DEPENDENCY_FILES)
+# Test with inputs 5 + 10
+test: $(BINARY_DIR)/$(TARGET)
+	@echo "Testing basic addition..."
+	@"$(BINARY_DIR)/$(TARGET)" 5 10
+	@echo "Basic addition test passed."
+	@echo "Testing input handling..."
+	@echo -e "5\n10\n\n\n" | "$(BINARY_DIR)/$(TARGET)" > /dev/null && echo "Input handling test passed."

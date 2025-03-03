@@ -17,7 +17,8 @@
 			"docsinit",
 			"HDRDIR",
 			"lpigpio",
-			"lpthread"
+			"lpthread",
+			"USERPROFILE"
 		]
 	}
 }
