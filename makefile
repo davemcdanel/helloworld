@@ -79,11 +79,15 @@ $(OBJECT_DIR)/%.o: $(SOURCE_DIR)/%.cpp
 
 # Version management
 update-version: $(HEADER_DIR)/version.h
-	@CURRENT_VER=$$(grep 'define VERSION_STRING' $(HEADER_DIR)/version.h | sed 's/.*VERSION_STRING "\(.*\)"/\1/'); \
+	@CURRENT_BRANCH=$$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "none"); \
+	if [ "$$CURRENT_BRANCH" != "main" ] && [ "$$CURRENT_BRANCH" != "none" ]; then \
+		echo "Warning: Not on main branch, using last known version"; \
+	fi; \
+	CURRENT_VER=$$(grep 'define VERSION_STRING' $(HEADER_DIR)/version.h | sed 's/.*VERSION_STRING "\(.*\)"/\1/'); \
 	MAJOR=$$(echo $$CURRENT_VER | cut -d'.' -f1); \
 	MINOR=$$(echo $$CURRENT_VER | cut -d'.' -f2); \
 	PATCH=$$(echo $$CURRENT_VER | cut -d'.' -f3); \
-	COMMIT_COUNT=$$(git rev-list --count main 2>/dev/null || echo 0); \
+	COMMIT_COUNT=$$(git rev-list --count main 2>/dev/null || echo $$MINOR); \
 	if [ "$$COMMIT_COUNT" -ne "$$MINOR" ]; then \
 		NEW_PATCH=0; \
 	else \

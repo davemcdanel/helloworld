@@ -21,7 +21,7 @@
 #endif
 
 #ifndef BUILD_SYSTEM_OKAY
-    #error "Build system not set up"
+    #error Build system not set up. This shouldn't show an error.
 #endif
 
 #include "function.hpp"
