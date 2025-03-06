@@ -96,6 +96,7 @@ int main(int argc, char* argv[]) {
 
     /// @todo This is a thing to do.
 
+    
     // Debug and compute
     std::cout << "Calling function with a=" << a << ", b=" << b << std::endl;
     c = function(a, b);

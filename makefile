@@ -83,8 +83,13 @@ update-version: $(HEADER_DIR)/version.h
 	MAJOR=$$(echo $$CURRENT_VER | cut -d'.' -f1); \
 	MINOR=$$(echo $$CURRENT_VER | cut -d'.' -f2); \
 	PATCH=$$(echo $$CURRENT_VER | cut -d'.' -f3); \
-	NEW_PATCH=$$((PATCH + 1)); \
-	NEW_VER="$$MAJOR.$$MINOR.$$NEW_PATCH"; \
+	COMMIT_COUNT=$$(git rev-list --count main 2>/dev/null || echo 0); \
+	if [ "$$COMMIT_COUNT" -ne "$$MINOR" ]; then \
+		NEW_PATCH=0; \
+	else \
+		NEW_PATCH=$$((PATCH + 1)); \
+	fi; \
+	NEW_VER="$$MAJOR.$$COMMIT_COUNT.$$NEW_PATCH"; \
 	sed -i "s/VERSION_STRING \".*\"/VERSION_STRING \"$$NEW_VER\"/" $(HEADER_DIR)/version.h; \
 	sed -i "s/BUILD_ID \".*\"/BUILD_ID \"$(BUILD_ID)\"/" $(HEADER_DIR)/version.h; \
 	echo "Updated $(HEADER_DIR)/version.h to version $$NEW_VER and build ID $(BUILD_ID)";
@@ -182,7 +187,7 @@ install: $(BUILD_ROOT)/.$(TARGET)/$(TARGET).conf $(BINARY_DIR)/$(TARGET)
 	@$(COPY) $(BINARY_DIR)/$(TARGET) "$(INSTALL_PATH)/" || { echo "Error: Failed to install $(TARGET) to $(INSTALL_PATH)"; exit 1; }
 	@$(CREATE_DIR) "$(CONFIG_PATH)" || { echo "Error: Failed to create $(CONFIG_PATH)"; exit 1; }
 	@if [ -f "$(CONFIG_PATH)/$(TARGET).conf" ]; then \
-		cp "$(CONFIG_PATH)/$(TARGET).conf" "$(CONFIG_PATH)/$(TARGET).conf.bak.$(BUILD_ID)"; \
+		$(COPY) "$(CONFIG_PATH)/$(TARGET).conf" "$(CONFIG_PATH)/$(TARGET).conf.bak.$(BUILD_ID)"; \
 		echo "Backed up config to $(CONFIG_PATH)/$(TARGET).conf.bak.$(BUILD_ID)"; \
 	fi
 	@$(COPY) $(BUILD_ROOT)/.$(TARGET)/$(TARGET).conf "$(CONFIG_PATH)/$(TARGET).conf" || \
