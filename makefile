@@ -7,9 +7,11 @@
 # Project configuration
 PROJECT_NAME = "Hello World! - For C++"
 TARGET = $(notdir $(shell pwd))
+TARGET_EXE = $(TARGET).exe
 BUILD_ROOT = $(shell pwd)
 BUILD_ID = $(shell date +%Y%m%d-%H:%M:%S)
 COMMIT_MSG ?= "Automatic commit of successful build."
+PLATFORM ?= "console"
 
 # Directory structure
 SOURCE_DIR = Source_Files
@@ -32,7 +34,7 @@ VERSION := $(shell grep 'define VERSION_STRING' $(HEADER_DIR)/version.h | sed 's
 # Platform-specific settings
 ifeq ($(OS),Windows_NT)
 	INSTALL_PATH = $(shell cygpath -u "$$USERPROFILE/AppData/Local/$(TARGET)")
-	CONFIG_PATH = $(INSTALL_PATH)/config
+	CONFIG_PATH = $(INSTALL_PATH)/.config
 else
 	INSTALL_PATH = $(HOME)/bin
 	CONFIG_PATH = $(HOME)
@@ -44,10 +46,23 @@ CREATE_DIR = mkdir -p
 COPY = install
 FIND_UTIL = /usr/bin/find
 
-CXX ?= g++
+CXX ?= /ucrt64/bin/g++
 CXXFLAGS = -std=c++17 -I$(HEADER_DIR) -Wall -DBUILD_SYSTEM_OKAY -MMD -MP
-LINKER ?= g++
-LDFLAGS = -Wall -lm -lpthread
+LINKER ?= /ucrt64/bin/g++
+
+ifeq ($(PLATFORM),console)
+# Windows console application
+	LDFLAGS = -Wall -lm -lpthread
+else ifeq ($(PLATFORM),raspberry)
+# Raspberry Pi with pigpio
+	LDFLAGS = -Wall -I. -lm -lpthread -lpigpio -lrt # raspberry pi
+else ifeq ($(PLATFORM),WinGUI)
+# Windows GUI Application
+	LDFLAGS = -Wall -I. -lm -lpthread -Wl,-subsystem,windows
+else 
+# Default Windows console application
+	LDFLAGS = -Wall -lm -lpthread
+endif
 
 # Build type toggle - override with: make BUILD_MODE=release all
 BUILD_MODE ?= debug
@@ -62,14 +77,14 @@ endif
 .PHONY: all update-version clean verify-tools  docs-clean docs-init docs commit push pull release run install uninstall test
 
 # Primary build target
-all: verify-tools update-version $(BINARY_DIR)/$(TARGET)
-	@echo "Built $(TARGET) in $(BUILD_MODE) mode."
+all: verify-tools update-version $(BINARY_DIR)/$(TARGET_EXE)
+	@echo "Built $(TARGET_EXE) in $(BUILD_MODE) mode."
 
 # Linking rule
-$(BINARY_DIR)/$(TARGET): $(OBJECT_FILES)
+$(BINARY_DIR)/$(TARGET_EXE): $(OBJECT_FILES)
 	@$(CREATE_DIR) $(BINARY_DIR)
 	@$(LINKER) $(OBJECT_FILES) $(LDFLAGS) -o $@
-	@echo "Linked $(TARGET) successfully!"
+	@echo "Linked $(TARGET_EXE) successfully!"
 
 # Compilation rule
 $(OBJECT_DIR)/%.o: $(SOURCE_DIR)/%.cpp
@@ -116,13 +131,13 @@ $(HEADER_DIR)/version.h:
 clean:
 	@$(REMOVE) $(OBJECT_FILES) $(DEPENDENCY_FILES)
 	@echo "Cleared object and dependency files."
-	@$(REMOVE) $(BINARY_DIR)/$(TARGET)
+	@$(REMOVE) $(BINARY_DIR)/$(TARGET_EXE)
 	@echo "Removed executable."
 
 # Tool verification
 verify-tools:
-	@command -v $(CXX) >/dev/null 2>&1 || { echo "Error: $(CXX) not found"; exit 1; }
-	@command -v doxygen >/dev/null 2>&1 || { echo "Warning: Doxygen not installed; 'docs' target will fail"; }
+	@/ucrt64/bin/g++ --version >/dev/null 2>&1 || { echo "Error: /ucrt64/bin/g++ not found"; exit 1; }
+	@doxygen --version >/dev/null 2>&1 || { echo "Warning: Doxygen not found in PATH; 'docs' target will fail"; }
 
 # Doxyfile creation
 Doxyfile:
@@ -144,17 +159,30 @@ docs-init:
 
 # Documentation generation
 docs: docs-clean docs-init Doxyfile
-	@sed -i '/^INPUT[ \t]*=/c\INPUT = . $(SOURCE_DIR) $(HEADER_DIR)' Doxyfile || echo "INPUT = . $(SOURCE_DIR) $(HEADER_DIR)" >> Doxyfile
-	@sed -i '/^OUTPUT_DIRECTORY[ \t]*=/c\OUTPUT_DIRECTORY = $(DOCUMENT_DIR)' Doxyfile || echo "OUTPUT_DIRECTORY = $(DOCUMENT_DIR)" >> Doxyfile
+	@sed -i '/^INPUT[ \t]*=/c\INPUT = . $(shell cygpath -w $(SOURCE_DIR)) $(shell cygpath -w $(HEADER_DIR))' Doxyfile || echo "INPUT = . $(shell cygpath -w $(SOURCE_DIR)) $(shell cygpath -w $(HEADER_DIR))" >> Doxyfile
+	@sed -i '/^OUTPUT_DIRECTORY[ \t]*=/c\OUTPUT_DIRECTORY = $(shell cygpath -w $(DOCUMENT_DIR))' Doxyfile || echo "OUTPUT_DIRECTORY = $(shell cygpath -w $(DOCUMENT_DIR))" >> Doxyfile
 	@sed -i '/^ENABLE_PREPROCESSING[ \t]*=/c\ENABLE_PREPROCESSING = YES' Doxyfile || echo "ENABLE_PREPROCESSING = YES" >> Doxyfile
 	@sed -i '/^MACRO_EXPANSION[ \t]*=/c\MACRO_EXPANSION = YES' Doxyfile || echo "MACRO_EXPANSION = YES" >> Doxyfile
 	@sed -i '/^EXPAND_ONLY_PREDEF[ \t]*=/c\EXPAND_ONLY_PREDEF = YES' Doxyfile || echo "EXPAND_ONLY_PREDEF = YES" >> Doxyfile
 	@sed -i '/^EXPAND_AS_DEFINED[ \t]*=/c\EXPAND_AS_DEFINED = VERSION_STRING' Doxyfile || echo "EXPAND_AS_DEFINED = VERSION_STRING" >> Doxyfile
 	@sed -i '/^PREDEFINED[ \t]*=/c\PREDEFINED =' Doxyfile || echo "PREDEFINED =" >> Doxyfile
 	@sed -i '/^PROJECT_NUMBER[ \t]*=/c\PROJECT_NUMBER = \"$(VERSION)\"' Doxyfile || echo "PROJECT_NUMBER = \"$(VERSION)\"" >> Doxyfile
-	@sed -i '/^PROJECT_NAME[ \t]*=/c\PROJECT_NAME = $(PROJECT_NAME)' Doxyfile || echo "PROJECT_NAME = \"$(PROJECT_NAME)\"" >> Doxyfile
+	@sed -i '/^PROJECT_NAME[ \t]*=/c\PROJECT_NAME = \"$(PROJECT_NAME)\"' Doxyfile || echo "PROJECT_NAME = \"$(PROJECT_NAME)\"" >> Doxyfile
 	@doxygen Doxyfile
 	@echo "Generated documentation in $(DOCUMENT_DIR)/"
+
+# docs: docs-clean docs-init Doxyfile
+#	@sed -i '/^INPUT[ \t]*=/c\INPUT = . $(SOURCE_DIR) $(HEADER_DIR)' Doxyfile || echo "INPUT = . $(SOURCE_DIR) $(HEADER_DIR)" >> Doxyfile
+#	@sed -i '/^OUTPUT_DIRECTORY[ \t]*=/c\OUTPUT_DIRECTORY = $(DOCUMENT_DIR)' Doxyfile || echo "OUTPUT_DIRECTORY = $(DOCUMENT_DIR)" >> Doxyfile
+#	@sed -i '/^ENABLE_PREPROCESSING[ \t]*=/c\ENABLE_PREPROCESSING = YES' Doxyfile || echo "ENABLE_PREPROCESSING = YES" >> Doxyfile
+#	@sed -i '/^MACRO_EXPANSION[ \t]*=/c\MACRO_EXPANSION = YES' Doxyfile || echo "MACRO_EXPANSION = YES" >> Doxyfile
+#	@sed -i '/^EXPAND_ONLY_PREDEF[ \t]*=/c\EXPAND_ONLY_PREDEF = YES' Doxyfile || echo "EXPAND_ONLY_PREDEF = YES" >> Doxyfile
+#	@sed -i '/^EXPAND_AS_DEFINED[ \t]*=/c\EXPAND_AS_DEFINED = VERSION_STRING' Doxyfile || echo "EXPAND_AS_DEFINED = VERSION_STRING" >> Doxyfile
+#	@sed -i '/^PREDEFINED[ \t]*=/c\PREDEFINED =' Doxyfile || echo "PREDEFINED =" >> Doxyfile
+#	@sed -i '/^PROJECT_NUMBER[ \t]*=/c\PROJECT_NUMBER = \"$(VERSION)\"' Doxyfile || echo "PROJECT_NUMBER = \"$(VERSION)\"" >> Doxyfile
+#	@sed -i '/^PROJECT_NAME[ \t]*=/c\PROJECT_NAME = $(PROJECT_NAME)' Doxyfile || echo "PROJECT_NAME = \"$(PROJECT_NAME)\"" >> Doxyfile
+#	@doxygen Doxyfile
+#	@echo "Generated documentation in $(DOCUMENT_DIR)/"
 
 # Git operations
 commit:
@@ -179,16 +207,16 @@ $(BUILD_ROOT)/.$(TARGET)/$(TARGET).conf:
 	@echo "Generated default config at $@"
 
 # Run target
-run: $(BUILD_ROOT)/.$(TARGET)/$(TARGET).conf $(BINARY_DIR)/$(TARGET)
-	@"$(BINARY_DIR)/$(TARGET)"
+run: $(BUILD_ROOT)/.$(TARGET)/$(TARGET).conf $(BINARY_DIR)/$(TARGET_EXE)
+	@"$(BINARY_DIR)/$(TARGET_EXE)"
 
 # Installation
-install: $(BUILD_ROOT)/.$(TARGET)/$(TARGET).conf $(BINARY_DIR)/$(TARGET)
+install: $(BUILD_ROOT)/.$(TARGET)/$(TARGET).conf $(BINARY_DIR)/$(TARGET_EXE)
 	@if [ "$(INSTALL_PATH)" = "$(HOME)/bin" ] && [ ! -w "$(INSTALL_PATH)" ]; then \
 		test "$$(id -u)" -ne 0 && { echo "Error: $(INSTALL_PATH) requires sudo privileges; run 'sudo make install'"; exit 1; }; \
 	fi
 	@test -d "$(INSTALL_PATH)" || $(CREATE_DIR) "$(INSTALL_PATH)" || { echo "Error: Failed to create install directory $(INSTALL_PATH)"; exit 1; }
-	@$(COPY) $(BINARY_DIR)/$(TARGET) "$(INSTALL_PATH)/" || { echo "Error: Failed to install $(TARGET) to $(INSTALL_PATH)"; exit 1; }
+	@$(COPY) $(BINARY_DIR)/$(TARGET_EXE) "$(INSTALL_PATH)/" || { echo "Error: Failed to install $(TARGET_EXE) to $(INSTALL_PATH)"; exit 1; }
 	@$(CREATE_DIR) "$(CONFIG_PATH)" || { echo "Error: Failed to create $(CONFIG_PATH)"; exit 1; }
 	@if [ -f "$(CONFIG_PATH)/$(TARGET).conf" ]; then \
 		$(COPY) "$(CONFIG_PATH)/$(TARGET).conf" "$(CONFIG_PATH)/$(TARGET).conf.bak.$(BUILD_ID)"; \
@@ -196,24 +224,24 @@ install: $(BUILD_ROOT)/.$(TARGET)/$(TARGET).conf $(BINARY_DIR)/$(TARGET)
 	fi
 	@$(COPY) $(BUILD_ROOT)/.$(TARGET)/$(TARGET).conf "$(CONFIG_PATH)/$(TARGET).conf" || \
 		{ echo "Warning: No config file found to install"; }
-	@echo "Installed $(TARGET) to $(INSTALL_PATH)"
+	@echo "Installed $(TARGET_EXE) to $(INSTALL_PATH)"
 	@echo "Config placed at $(CONFIG_PATH)/$(TARGET).conf"
 
 # Uninstall
 uninstall:
-	@$(REMOVE) "$(INSTALL_PATH)/$(TARGET)"
+	@$(REMOVE) "$(INSTALL_PATH)/$(TARGET_EXE)"
 	@$(REMOVE) "$(CONFIG_PATH)/$(TARGET).conf"
 	@if [ -d "$(CONFIG_PATH)" ] && [ -z "$$(ls -A "$(CONFIG_PATH)")" ]; then \
 		rmdir "$(CONFIG_PATH)"; \
 		echo "Removed empty $(CONFIG_PATH)"; \
 	fi
-	@echo "Uninstalled $(TARGET) from $(INSTALL_PATH)"
+	@echo "Uninstalled $(TARGET_EXE) from $(INSTALL_PATH)"
 	@echo "Removed config from $(CONFIG_PATH)"
 
 # Test with inputs 5 + 10
-test: $(BINARY_DIR)/$(TARGET)
+test: $(BINARY_DIR)/$(TARGET_EXE)
 	@echo "Testing basic addition..."
-	@"$(BINARY_DIR)/$(TARGET)" 5 10
+	@"$(BINARY_DIR)/$(TARGET_EXE)" 5 10
 	@echo "Basic addition test passed."
 	@echo "Testing input handling..."
-	@echo -e "5\n10\n\n\n" | "$(BINARY_DIR)/$(TARGET)" > /dev/null && echo "Input handling test passed."
+	@echo -e "5\n10\n\n\n" | "$(BINARY_DIR)/$(TARGET_EXE)" > /dev/null && echo "Input handling test passed."

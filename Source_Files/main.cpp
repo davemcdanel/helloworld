@@ -21,7 +21,7 @@
 #endif
 
 #ifndef BUILD_SYSTEM_OKAY
-    #error Build system not set up. This shouldn't show an error.
+    #error Build system not set up.
 #endif
 
 #include "function.hpp"
@@ -46,7 +46,8 @@ int main(int argc, char* argv[]) {
     std::cout << "----------------" << std::endl;
 
     int a{0}, b{0}, c{0};
-    int retries = 5;
+    const int retriesStart = 4;
+    int retries = retriesStart;
 
     if (argc>=3){
         try{
@@ -78,7 +79,7 @@ int main(int argc, char* argv[]) {
         }
 
         // Get input for b
-        retries = 5;
+        retries = retriesStart;
         while (retries > 0) {
             std::cout << "Retries remaining: " << retries << std::endl;
             if (getIntegerInput("Enter value for b: ", b)) {

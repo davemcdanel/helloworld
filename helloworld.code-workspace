@@ -15,6 +15,7 @@
 			"DBUILD",
 			"docsclean",
 			"docsinit",
+			"Doxyfile",
 			"HDRDIR",
 			"lpigpio",
 			"lpthread",

@@ -42,13 +42,13 @@ DOXYFILE_ENCODING      = UTF-8
 # title of most generated pages and in a few other places.
 # The default value is: My Project.
 
-PROJECT_NAME = "Hello World! - For C++"
+PROJECT_NAME = ""Hello World! - For C++""
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number. This
 # could be handy for archiving the generated documentation or if some version
 # control system is used.
 
-PROJECT_NUMBER = "0.0.11"
+PROJECT_NUMBER = "0.39.5"
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer a
@@ -2923,4 +2923,4 @@ MSCGEN_TOOL            =
 # command).
 
 MSCFILE_DIRS           =
-PROJECT_NAME = "Hello World! - For C++"
+PROJECT_NAME = ""Hello World! - For C++""
