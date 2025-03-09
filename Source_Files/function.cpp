@@ -9,8 +9,12 @@
  */
 #include "function.hpp"
 
-int function(int a, int b){
-    return a+b;
+int add(int a, int b){
+    if (a > std::numeric_limits<int>::max() - b) {
+        std::cerr << "Integer overflow detected!" << std::endl;
+        return std::numeric_limits<int>::max();
+    }
+    return a + b;
 }
 
 bool getIntegerInput(const std::string& prompt, int& value) {

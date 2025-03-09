@@ -3,19 +3,25 @@
         {
             "name": "GCC",
             "includePath": [
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/Header_Files/"
+                "${workspaceFolder}/Header_Files",
+                "C:/msys64/ucrt64/include/c++/14.2.0",
+                "C:/msys64/ucrt64/include"
             ],
             "defines": [
                 "_DEBUG",
-                "UNICODE",
-                "_UNICODE",
                 "BUILD_SYSTEM_OKAY"
             ],
             "cStandard": "c17",
             "cppStandard": "gnu++17",
             "intelliSenseMode": "windows-gcc-x64",
-            "compilerPath": "C:\\msys64\\ucrt64\\bin\\g++.exe"
+            "compilerPath": "C:/msys64/ucrt64/bin/g++.exe",
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/**",
+                    "C:/msys64/ucrt64/include/**"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            }
         }
     ],
     "version": 4

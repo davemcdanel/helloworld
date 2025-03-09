@@ -1,8 +1,17 @@
-# Keep the docs folder but not the docs
+# Keep the empty docs folder
 docs/*
 !docs/PlaceHolder.txt
 
-# Don't keep the doxygen warnings log
+# Keep the empty bin folder
+bin/*
+!bin/PlaceHolder.txt
+
+# Keep the empty obj folder
+obj/*
+!obj/PlaceHolder.txt
+
+# Don't keep the Doxyfile or doxygen warnings log
+Doxyfile
 doxygen_warnings.log
 
 # ---> C++
@@ -39,3 +48,9 @@ doxygen_warnings.log
 *.out
 *.app
 
+# VSCode-specific
+.vscode/*
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/c_cpp_properties.json
+!.vscode/settings.json

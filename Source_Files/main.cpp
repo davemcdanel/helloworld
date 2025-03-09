@@ -95,12 +95,12 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    /// @todo This is a thing to do.
+    // This is a test for doxygen todo list.
+    /// @todo This is a thing to do
 
-    
     // Debug and compute
     std::cout << "Calling function with a=" << a << ", b=" << b << std::endl;
-    c = function(a, b);
+    c = add(a, b);
     std::cout << "Function returned: " << c << std::endl;
     std::cout << "Preparing output..." << std::endl;
     std::cout << "Output:\n" << a << "+" << b << "=" << c << std::endl;
