@@ -171,19 +171,6 @@ docs: docs-clean docs-init Doxyfile
 	@doxygen Doxyfile
 	@echo "Generated documentation in $(DOCUMENT_DIR)/"
 
-# docs: docs-clean docs-init Doxyfile
-#	@sed -i '/^INPUT[ \t]*=/c\INPUT = . $(SOURCE_DIR) $(HEADER_DIR)' Doxyfile || echo "INPUT = . $(SOURCE_DIR) $(HEADER_DIR)" >> Doxyfile
-#	@sed -i '/^OUTPUT_DIRECTORY[ \t]*=/c\OUTPUT_DIRECTORY = $(DOCUMENT_DIR)' Doxyfile || echo "OUTPUT_DIRECTORY = $(DOCUMENT_DIR)" >> Doxyfile
-#	@sed -i '/^ENABLE_PREPROCESSING[ \t]*=/c\ENABLE_PREPROCESSING = YES' Doxyfile || echo "ENABLE_PREPROCESSING = YES" >> Doxyfile
-#	@sed -i '/^MACRO_EXPANSION[ \t]*=/c\MACRO_EXPANSION = YES' Doxyfile || echo "MACRO_EXPANSION = YES" >> Doxyfile
-#	@sed -i '/^EXPAND_ONLY_PREDEF[ \t]*=/c\EXPAND_ONLY_PREDEF = YES' Doxyfile || echo "EXPAND_ONLY_PREDEF = YES" >> Doxyfile
-#	@sed -i '/^EXPAND_AS_DEFINED[ \t]*=/c\EXPAND_AS_DEFINED = VERSION_STRING' Doxyfile || echo "EXPAND_AS_DEFINED = VERSION_STRING" >> Doxyfile
-#	@sed -i '/^PREDEFINED[ \t]*=/c\PREDEFINED =' Doxyfile || echo "PREDEFINED =" >> Doxyfile
-#	@sed -i '/^PROJECT_NUMBER[ \t]*=/c\PROJECT_NUMBER = \"$(VERSION)\"' Doxyfile || echo "PROJECT_NUMBER = \"$(VERSION)\"" >> Doxyfile
-#	@sed -i '/^PROJECT_NAME[ \t]*=/c\PROJECT_NAME = $(PROJECT_NAME)' Doxyfile || echo "PROJECT_NAME = \"$(PROJECT_NAME)\"" >> Doxyfile
-#	@doxygen Doxyfile
-#	@echo "Generated documentation in $(DOCUMENT_DIR)/"
-
 # Git operations
 commit:
 	@cd $(BUILD_ROOT) && \
