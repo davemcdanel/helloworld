@@ -30,6 +30,7 @@ DEPENDENCY_FILES := $(OBJECT_FILES:.o=.d)
 
 # Version extraction
 VERSION := $(shell grep 'define VERSION_STRING' $(HEADER_DIR)/version.h | sed 's/.*VERSION_STRING "\(.*\)"/\1/')
+export VERSION_STRING=$(VERSION)
 
 # Platform-specific settings
 ifeq ($(OS),Windows_NT)
@@ -141,9 +142,14 @@ verify-tools:
 
 # Doxyfile creation
 Doxyfile:
-	@echo "Generating default Doxyfile..."
-	@doxygen -g Doxyfile
-	@echo "Default Doxyfile created."
+	@echo "Generating minimal Doxyfile..."
+	@doxygen -s -g Doxyfile
+	@echo "Minimal Doxyfile created."
+	@sed -i '/^EXTRACT_ALL[ \t]*=/c\EXTRACT_ALL = YES' Doxyfile || echo "EXTRACT_ALL = YES" >> Doxyfile
+	@sed -i '/^SOURCE_BROWSER[ \t]*=/c\SOURCE_BROWSER = YES' Doxyfile || echo "SOURCE_BROWSER = YES" >> Doxyfile
+	@sed -i '/^GENERATE_TREEVIEW[ \t]*=/c\GENERATE_TREEVIEW = YES' Doxyfile || echo "GENERATE_TREEVIEW = YES" >> Doxyfile
+	@sed -i '/^GENERATE_LATEX[ \t]*=/c\GENERATE_LATEX = NO' Doxyfile || echo "GENERATE_LATEX = NO" >> Doxyfile
+	@echo "Basic HTML output with tree view.  Setting can be overridden in Doxyfile."
 
 # Documentation cleanup
 docs-clean:
@@ -161,13 +167,8 @@ docs-init:
 docs: docs-clean docs-init Doxyfile
 	@sed -i '/^INPUT[ \t]*=/c\INPUT = . $(shell cygpath -w $(SOURCE_DIR)) $(shell cygpath -w $(HEADER_DIR))' Doxyfile || echo "INPUT = . $(shell cygpath -w $(SOURCE_DIR)) $(shell cygpath -w $(HEADER_DIR))" >> Doxyfile
 	@sed -i '/^OUTPUT_DIRECTORY[ \t]*=/c\OUTPUT_DIRECTORY = $(shell cygpath -w $(DOCUMENT_DIR))' Doxyfile || echo "OUTPUT_DIRECTORY = $(shell cygpath -w $(DOCUMENT_DIR))" >> Doxyfile
-	@sed -i '/^ENABLE_PREPROCESSING[ \t]*=/c\ENABLE_PREPROCESSING = YES' Doxyfile || echo "ENABLE_PREPROCESSING = YES" >> Doxyfile
-	@sed -i '/^MACRO_EXPANSION[ \t]*=/c\MACRO_EXPANSION = YES' Doxyfile || echo "MACRO_EXPANSION = YES" >> Doxyfile
-	@sed -i '/^EXPAND_ONLY_PREDEF[ \t]*=/c\EXPAND_ONLY_PREDEF = YES' Doxyfile || echo "EXPAND_ONLY_PREDEF = YES" >> Doxyfile
-	@sed -i '/^EXPAND_AS_DEFINED[ \t]*=/c\EXPAND_AS_DEFINED = VERSION_STRING' Doxyfile || echo "EXPAND_AS_DEFINED = VERSION_STRING" >> Doxyfile
-	@sed -i '/^PREDEFINED[ \t]*=/c\PREDEFINED =' Doxyfile || echo "PREDEFINED =" >> Doxyfile
 	@sed -i '/^PROJECT_NUMBER[ \t]*=/c\PROJECT_NUMBER = \"$(VERSION)\"' Doxyfile || echo "PROJECT_NUMBER = \"$(VERSION)\"" >> Doxyfile
-	@sed -i '/^PROJECT_NAME[ \t]*=/c\PROJECT_NAME = \"$(PROJECT_NAME)\"' Doxyfile || echo "PROJECT_NAME = \"$(PROJECT_NAME)\"" >> Doxyfile
+	@sed -i '/^PROJECT_NAME[ \t]*=/c\PROJECT_NAME = $(PROJECT_NAME)' Doxyfile || echo "PROJECT_NAME = $(PROJECT_NAME)" >> Doxyfile
 	@doxygen Doxyfile
 	@echo "Generated documentation in $(DOCUMENT_DIR)/"
 
