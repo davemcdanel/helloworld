@@ -98,6 +98,9 @@ int main(int argc, char* argv[]) {
     // This is a test for doxygen todo list and also Todo Tree.
     /// @note this is a note.
     /**
+     * 
+     * @warning This is a stern warning!
+     * 
      * @todo This is todo is not open.
      * 
      * @todo[x] This is a markdown checkbox marked complete.

@@ -25,7 +25,7 @@
 			"ucrt",
 			"USERPROFILE"
 		],
-		"todo-tree.regex.regex": "(//|///|#|<!--|/\\*|^\\s*\\*)\\s*($TAGS)",
+		"todo-tree.regex.regex": "(//|///|#|<!--|/\\*|^\\s*\\*)\\s*($TAGS).*",
     	"todo-tree.general.tags": [
 			"@note",
 			"@warning",
@@ -41,7 +41,14 @@
 				"iconColour": "#36aef4",
 				"gutterIcon": true,
    		    },
-    	    "@todo":{
+			"@warning": {
+				"icon": "alert",
+				"foreground": "#FF9800",
+				"background": "#5A3C2C",
+				"iconColour": "#FF9800",
+				"gutterIcon": true,
+			},
+			"@todo":{
 				"icon": "circle",
 				"foreground": "#f44336",
     	        "background": "#592c2c",
@@ -58,7 +65,7 @@
 	        "@todo[ ]":{
 				"icon": "tools",
 				"foreground": "#FFFF00",
-    	        "background": "#592c2c",
+    	        "background": "#4a4a00",
 				"iconColour": "#FFFF00",
 				"gutterIcon": true,
    		    },
