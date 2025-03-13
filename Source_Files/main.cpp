@@ -95,8 +95,15 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    // This is a test for doxygen todo list.
-    /// @todo This is a thing to do
+    // This is a test for doxygen todo list and also Todo Tree.
+    /// @note this is a note.
+    /**
+     * @todo This is todo is not open.
+     * 
+     * @todo[x] This is a markdown checkbox marked complete.
+     * 
+     * @todo[ ] This is a markdown checkbox not complete.
+     */
 
     // Debug and compute
     std::cout << "Calling function with a=" << a << ", b=" << b << std::endl;

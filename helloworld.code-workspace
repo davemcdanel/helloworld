@@ -20,7 +20,48 @@
 			"HDRDIR",
 			"lpigpio",
 			"lpthread",
+			"pigpio",
+			"TREEVIEW",
+			"ucrt",
 			"USERPROFILE"
-		]
+		],
+		"todo-tree.regex.regex": "(//|///|#|<!--|/\\*|^\\s*\\*)\\s*($TAGS)",
+    	"todo-tree.general.tags": [
+			"@note",
+			"@warning",
+        	"@todo",
+			"@todo[x]",
+        	"@todo[ ]",
+    	],
+	    "todo-tree.highlights.customHighlight": {
+			"@note":{
+				"icon": "note",
+				"foreground": "#36aef4",
+    	        "background": "#2c5059",
+				"iconColour": "#36aef4",
+				"gutterIcon": true,
+   		    },
+    	    "@todo":{
+				"icon": "circle",
+				"foreground": "#f44336",
+    	        "background": "#592c2c",
+				"iconColour": "#f44336",
+				"gutterIcon": true,
+   		    },
+			"@todo[x]":{
+				"icon": "check",
+				"foreground": "#64dd17",
+				"background": "#008000",
+				"iconColour": "#008000",
+				"gutterIcon": true,
+    	    },
+	        "@todo[ ]":{
+				"icon": "tools",
+				"foreground": "#FFFF00",
+    	        "background": "#592c2c",
+				"iconColour": "#FFFF00",
+				"gutterIcon": true,
+   		    },
+	    }
 	}
 }
