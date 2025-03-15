@@ -4,23 +4,5 @@
         "*.dox": "doxygen",
         "vector": "cpp",
         "limits": "cpp"
-    },
-    "todo-tree.regex.regex": "(//|#|<!--|/\\*|^\\s*\\*)\\s*($TAGS)",
-    "todo-tree.general.tags": [
-        "TODO",
-        "@todo",
-        "[x]",
-        "[ ]",
-    ],
-    "todo-tree.highlights.customHighlight": {
-        "[x]":{
-            "foreground": "#64dd17",
-            "background":"#008800"
-        },
-        "[ ]":{
-            "foreground": "#f44336",
-            "background": "#592c2c",
-        },
     }
-
 }

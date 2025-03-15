@@ -36,16 +36,16 @@
 	    "todo-tree.highlights.customHighlight": {
 			"@note":{
 				"icon": "note",
-				"foreground": "#36aef4",
-    	        "background": "#2c5059",
-				"iconColour": "#36aef4",
+				"foreground": "#f1b602",
+    	        "background": "#3b2e04",
+				"iconColour": "#f1b602",
 				"gutterIcon": true,
    		    },
 			"@warning": {
 				"icon": "alert",
-				"foreground": "#FF9800",
+				"foreground": "#ad2617",
 				"background": "#5A3C2C",
-				"iconColour": "#FF9800",
+				"iconColour": "#ad2617",
 				"gutterIcon": true,
 			},
 			"@todo":{
