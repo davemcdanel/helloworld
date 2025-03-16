@@ -24,8 +24,8 @@ int add(int a,int b);
 /** @brief Get integer input using std::cin.
  * 
  * @param prompt std::string String to prompt user for input.
- * @param value Varible to assign value to.
- * @return true on sucessful integer input.
+ * @param value Variable to assign value to.
+ * @return true on successful integer input.
  * @return false on failure to enter integer input.
  */
 bool getIntegerInput(const std::string& prompt, int& value);
