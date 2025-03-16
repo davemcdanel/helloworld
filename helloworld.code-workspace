@@ -44,15 +44,15 @@
 			"@warning": {
 				"icon": "alert",
 				"foreground": "#ad2617",
-				"background": "#5A3C2C",
+				"background": "#2e1917",
 				"iconColour": "#ad2617",
 				"gutterIcon": true,
 			},
 			"@todo":{
 				"icon": "circle",
-				"foreground": "#f44336",
-    	        "background": "#592c2c",
-				"iconColour": "#f44336",
+				"foreground": "#1982d2",
+    	        "background": "#163750",
+				"iconColour": "#1982d2",
 				"gutterIcon": true,
    		    },
 			"@todo[x]":{
