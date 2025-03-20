@@ -102,9 +102,12 @@ int main(int argc, char* argv[]) {
      * 
      * @todo This is todo is not open.
      * 
-     * @todo[x] This is a markdown checkbox marked complete.
+     * @todo-[x] Title of Item - 
+     *  This is a completed item that has been closed. I made a change to fix something.  
      * 
-     * @todo[ ] This is a markdown checkbox not complete.
+     * @todo-[ ] Item 2 - 
+     *  A complex problem.
+     *  This is an item that is currently being worked on.  It needs changes.
      */
 
     // Debug and compute
