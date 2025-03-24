@@ -1,0 +1,70 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"*.dox": "doxygen",
+			"vector": "cpp",
+			"limits": "cpp",
+			"iostream": "cpp"
+		},
+		"todo-tree.general.tags": [
+			"@note",
+			"@warning",
+			"@todo",
+			"@todo-[x]",
+			"@todo-[ ]"
+		],
+		"todo-tree.highlights.customHighlight": {
+			"@note": {
+				"icon": "note",
+				"foreground": "#f1b602",
+				"background": "#3b2e04",
+				"iconColour": "#f1b602",
+				"gutterIcon": true
+			},
+			"@warning": {
+				"icon": "alert",
+				"foreground": "#ad2617",
+				"background": "#2e1917",
+				"iconColour": "#ad2617",
+				"gutterIcon": true
+			},
+			"@todo": {
+				"icon": "circle",
+				"foreground": "#1982d2",
+				"background": "#163750",
+				"iconColour": "#1982d2",
+				"gutterIcon": true
+			},
+			"@todo-[x]": {
+				"icon": "check",
+				"foreground": "#64dd17",
+				"background": "#008000",
+				"iconColour": "#008000",
+				"gutterIcon": true
+			},
+			"@todo-[ ]": {
+				"icon": "tools",
+				"foreground": "#FFFF00",
+				"background": "#4a4a00",
+				"iconColour": "#FFFF00",
+				"gutterIcon": true
+			}
+		},
+		"todo-tree.regex.regex": "(//|///|#|<!--|/\\*|^\\s*\\*)\\s*($TAGS).*",
+		"todo-tree.general.showIconsInsteadOfTagsInStatusBar": false,
+		"todo-tree.general.statusBar": "top three",
+		"todo-tree.tree.groupedByTag": true,
+		"todo-tree.tree.groupedBySubTag": false,
+		"todo-tree.tree.showBadges": true,
+		"todo-tree.tree.showCountsInTree": true,
+		"todo-tree.tree.tagsOnly": false,
+		"todo-tree.tree.disableCompactFolders": false,
+		"todo-tree.tree.expanded": false,
+		"todo-tree.tree.hideIconsWhenGroupedByTag": false
+	}
+}
