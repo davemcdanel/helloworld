@@ -5,7 +5,7 @@
  * @mainpage Hello World! - For C++
  * @version @b $(VERSION_STRING)
  * @brief C++ edition of the classic Hello World program. This version is used to test VSCODE with MSYS2/UCRT64 and GCC but should compile on most versions of C++.
- * @author David Lee McDanel <smokepid@gmail.com>; <pidsynccontrol@gmail.com>
+ * @author David Lee McDanel <smokepid@gmail.com>; <pidsynccontrol@gmail.com>; 54825816+davemcdanel@users.noreply.github.com
  * @date June 5, 2016, 9:36 
  * @copyright Copyright (c) 2025 David Lee McDanel
  * @n @n This is free and unencumbered software released into the public domain under the Unlicense (see LICENSE.md).
