@@ -4,7 +4,6 @@
             "name": "GCC",
             "includePath": [
                 "${workspaceFolder}/Header_Files",
-                "C:/msys64/ucrt64/include/c++/14.2.0",
                 "C:/msys64/ucrt64/include"
             ],
             "defines": [

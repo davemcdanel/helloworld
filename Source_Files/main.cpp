@@ -1,15 +1,15 @@
 #include "version.h"
-/** Hello World! - For C++
+/** vscode-msys2-ucrt64-cpp-template
  * @file main.cpp
  * @brief Main entry point.
  * @mainpage Hello World! - For C++
  * @version @b $(VERSION_STRING)
- * @brief C++ edition of the classic Hello World program. This version is used to test VSCODE with MSYS2 MinGW64 but should compile on most versions of C++.
+ * @brief C++ edition of the classic Hello World program. This version is used to test VSCODE with MSYS2/UCRT64 and GCC but should compile on most versions of C++.
  * @author David Lee McDanel <smokepid@gmail.com>; <pidsynccontrol@gmail.com>
  * @date June 5, 2016, 9:36 
  * @copyright Copyright (c) 2025 David Lee McDanel
  * @n @n This is free and unencumbered software released into the public domain under the Unlicense (see LICENSE.md).
- */ 
+ */
 
 #include <iostream>
 #include <vector>
@@ -53,13 +53,13 @@ int main(int argc, char* argv[]) {
         try{
             a = std::stoi(argv[1]);
         }catch(std::invalid_argument const& ex){
-            std::cout << "CLI entry for a is not valid: " << ex.what() << "\nPlease enter new value for a.";
+            std::cout << "CLI entry for \"a\" is not valid: " << ex.what() << "\nPlease enter new value for a.";
             return 1;
         }
         try{
             b = std::stoi(argv[2]);
         }catch(std::invalid_argument const& ex){
-                std::cout << "CLI entry for a is not valid." << ex.what() << "\nPlease enter new value for b.";
+                std::cout << "CLI entry for \"b\" is not valid." << ex.what() << "\nPlease enter new value for b.";
                 return 2;
         }
     }else {
@@ -100,7 +100,7 @@ int main(int argc, char* argv[]) {
     /**
      * @warning This is a stern warning!
      * 
-     * @todo This is todo is not open.
+     * @todo This todo is not open.
      * 
      * @todo-[x] Title of Item - 
      *  This is a completed item that has been closed. I made a change to fix something.  

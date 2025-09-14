@@ -5,7 +5,7 @@
 # Description: A custom Makefile for building, documenting, and installing the Hello World! - For C++ project.
 
 # Project configuration
-PROJECT_NAME = "Hello World! - For C++"
+PROJECT_NAME = "vscode-msys2-ucrt64-cpp-template"
 TARGET = $(notdir $(shell pwd))
 TARGET_EXE = $(TARGET).exe
 BUILD_ROOT = $(shell pwd)
